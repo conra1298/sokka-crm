@@ -1,0 +1,32 @@
+@import url('https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700&display=swap');
+
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  body {
+    @apply bg-[#F8FAFC] text-[#0f172a] font-sans antialiased selection:bg-[#5CB2D4] selection:text-[#0f172a];
+  }
+
+  h1, h2, h3, h4, h5, h6 {
+    @apply font-display tracking-tight text-[#274283];
+  }
+}
+
+/* Sokka Design System Custom Utility Classes */
+.btn-primary {
+  @apply inline-flex items-center justify-center px-6 py-2.5 rounded-full bg-[#EB7638] text-white font-semibold shadow-md hover:bg-[#d15f2a] hover:-translate-y-0.5 active:translate-y-0 transition-all duration-200 disabled:opacity-50 disabled:pointer-events-none;
+}
+
+.btn-secondary {
+  @apply inline-flex items-center justify-center px-5 py-2.5 rounded-full bg-white text-[#274283] font-semibold border border-slate-300 shadow-sm hover:bg-slate-50 hover:border-slate-400 hover:-translate-y-0.5 active:translate-y-0 transition-all duration-200 disabled:opacity-50 disabled:pointer-events-none;
+}
+
+.glass-card {
+  @apply bg-white/80 backdrop-blur-md border border-white/40 shadow-sm rounded-2xl;
+}
+
+.section-padding {
+  @apply py-12 md:py-16 px-4 md:px-8 max-w-7xl mx-auto;
+}

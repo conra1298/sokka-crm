@@ -1,0 +1,28 @@
+# dependencies
+/node_modules
+/.pnpm
+/.yarn
+
+# next.js
+/.next/
+/out/
+
+# production & environment files
+.env
+.env.local
+.env.development.local
+.env.test.local
+.env.production.local
+
+# local database files & dumps
+*.db
+*.db-shm
+*.db-wal
+sokka_crm_pgdata/
+
+# debug logs & OS files
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+.DS_Store
+*.pem

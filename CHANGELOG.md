@@ -5,8 +5,18 @@ El formato está basado en [Keep a Changelog](https://keepachangelog.com/es-ES/1
 
 ---
 
-## [Unreleased]
-- Proximas mejoras de diseño de identidad de marca Sokka Estudio en propuestas PDF.
+## [1.0.1] - 2026-08-12
+
+### 💄 Cambios (UI & UX)
+- **Logo de Sokka**: Reemplazo del avatar genérico por el logo oficial (`logo-app.svg`) en la pantalla de Inicio de Sesión (`/login`).
+- **Etiquetas Visibles en Listados**: Las etiquetas asignadas ahora se muestran como *badges* de colores directamente en los listados del directorio de Empresas y Contactos, facilitando la visualización sin entrar al detalle.
+- **Propuestas Comerciales (PDF)**:
+  - Optimización de márgenes y espacios de impresión (`@media print`) para evitar que la hoja se extienda en forma apaisada y para separar el texto de los bordes.
+  - El presentador de la propuesta toma dinámicamente el nombre del propietario asignado al negocio, sustituyendo automáticamente el nombre "Conrado Backup" por "Conrado Giampaoletti".
+
+### 🔧 Correcciones (Fixes)
+- **Base de Datos**: Corrección del script de usuarios (`reset-users.ts`) para sincronizarse con Turso DB inyectando explícitamente el token y URL de producción.
+- **Drizzle ORM**: Se agregaron las relaciones faltantes `companyTags` y `contactTags` al schema para evitar cierres inesperados (crash) en el listado de empresas y contactos.
 
 ---
 

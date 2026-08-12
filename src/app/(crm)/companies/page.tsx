@@ -104,6 +104,20 @@ export default async function CompaniesPage(props: {
                         <Building2 className="w-4 h-4 text-slate-400" />
                         <span>{company.name}</span>
                       </Link>
+                      {company.companyTags && company.companyTags.length > 0 && (
+                        <div className="flex flex-wrap gap-1 mt-1.5">
+                          {company.companyTags.map((ct: any) => (
+                            <span
+                              key={ct.tag.id}
+                              className="px-1.5 py-0.5 rounded text-[10px] font-semibold text-white shadow-sm truncate max-w-[100px]"
+                              style={{ backgroundColor: ct.tag.color }}
+                              title={ct.tag.name}
+                            >
+                              {ct.tag.name}
+                            </span>
+                          ))}
+                        </div>
+                      )}
                     </td>
 
                     <td className="p-4 text-xs font-mono text-slate-600">

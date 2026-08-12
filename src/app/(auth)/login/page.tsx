@@ -118,8 +118,8 @@ export default function LoginPage() {
     <div className="min-h-screen flex flex-col justify-center items-center px-4 bg-gradient-to-b from-[#F8FAFC] to-slate-200">
       <div className="w-full max-w-md">
         <div className="text-center mb-8">
-          <div className="inline-flex items-center justify-center w-16 h-16 rounded-full bg-[#EB7638] text-white font-bold text-3xl shadow-xl mb-4">
-            S
+          <div className="inline-flex items-center justify-center mb-4">
+            <img src="/logo-app.svg" alt="Sokka Logo" className="w-16 h-16 object-contain drop-shadow-xl" />
           </div>
           <h1 className="font-display font-extrabold text-3xl text-[#274283]">SOKKA CRM</h1>
           <p className="text-slate-600 text-sm mt-1">Gestión Estratégica de Ventas B2B</p>

@@ -79,6 +79,11 @@ export async function listContacts(
       owner: true,
       deals: true,
       activities: true,
+      contactTags: {
+        with: {
+          tag: true,
+        },
+      },
     },
     orderBy: [desc(contacts.createdAt)],
   });

@@ -71,7 +71,7 @@ export default function BriefEditor({
         onChange={(e) => setBrief(e.target.value)}
         onBlur={handleSave}
         placeholder="Escribí aquí el brief, necesidades clave del cliente, competidores, presupuesto aproximado, expectativas u observaciones..."
-        className="w-full h-36 p-3.5 text-xs text-slate-700 bg-slate-50 border border-slate-200 rounded-2xl focus:outline-none focus:ring-2 focus:ring-[#5CB2D4] focus:bg-white transition-all resize-y leading-relaxed"
+        className="w-full h-36 p-3.5 text-xs text-slate-700 bg-slate-50 border border-slate-200 rounded-2xl focus:outline-none focus:ring-2 focus:ring-[#5CB2D4] focus:bg-white transition-all resize-y leading-relaxed break-words"
       />
     </div>
   );

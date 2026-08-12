@@ -325,6 +325,7 @@ export const companiesRelations = relations(companies, ({ one, many }) => ({
   contacts: many(contacts),
   deals: many(deals),
   activities: many(activities),
+  companyTags: many(companyTags),
 }));
 
 export const contactsRelations = relations(contacts, ({ one, many }) => ({
@@ -344,6 +345,7 @@ export const contactsRelations = relations(contacts, ({ one, many }) => ({
   deals: many(deals),
   activities: many(activities),
   tasks: many(tasks),
+  contactTags: many(contactTags),
 }));
 
 export const pipelineStagesRelations = relations(pipelineStages, ({ many }) => ({

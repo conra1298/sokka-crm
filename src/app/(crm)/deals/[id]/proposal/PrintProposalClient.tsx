@@ -24,7 +24,7 @@ export default function PrintProposalClient({
   };
 
   return (
-    <div className="max-w-4xl mx-auto space-y-6">
+    <div className="max-w-4xl mx-auto space-y-6 print:max-w-full print:w-full print:mx-0">
       {/* Top Action Bar (Hidden on Print) */}
       <div className="flex items-center justify-between bg-white p-4 rounded-2xl border border-slate-200 shadow-sm print:hidden">
         <Link
@@ -46,14 +46,12 @@ export default function PrintProposalClient({
       </div>
 
       {/* Printable Sheet Card */}
-      <div className="bg-white p-8 sm:p-12 rounded-3xl border border-slate-200 shadow-lg print:shadow-none print:border-none print:p-0 space-y-8 font-sans">
+      <div className="bg-white p-8 sm:p-12 rounded-3xl border border-slate-200 shadow-lg print:shadow-none print:border-none print:p-6 sm:print:p-10 space-y-8 font-sans">
         {/* Header Branding */}
         <div className="flex items-start justify-between border-b-2 border-[#274283] pb-6">
           <div className="space-y-1">
             <div className="flex items-center gap-3">
-              <div className="w-10 h-10 rounded-full bg-[#EB7638] flex items-center justify-center font-bold text-white shadow-md text-xl">
-                S
-              </div>
+              <img src="/logo-app.svg" alt="Sokka Logo" className="w-10 h-10 object-contain drop-shadow-sm" />
               <div>
                 <h1 className="font-display font-bold text-2xl text-[#274283] tracking-tight">
                   SOKKA ESTUDIO
@@ -98,7 +96,9 @@ export default function PrintProposalClient({
 
           <div className="space-y-2 sm:text-right sm:border-l sm:border-slate-200 sm:pl-6">
             <p className="text-[10px] font-bold uppercase tracking-wider text-[#274283]">Presentado Por:</p>
-            <p className="font-bold text-sm text-slate-900">{deal.owner?.name || 'Sokka Estudio'}</p>
+            <p className="font-bold text-sm text-slate-900">
+              {deal.owner?.name === 'Conrado Backup' ? 'Conrado Giampaoletti' : (deal.owner?.name || 'Sokka Estudio')}
+            </p>
             <p className="text-xs text-slate-600">Sokka Estudio Creativo</p>
             <p className="text-xs text-slate-500">contacto@sokkaestudio.com</p>
           </div>
@@ -112,12 +112,12 @@ export default function PrintProposalClient({
           {deal.briefNotes ? (
             <div className="p-4 rounded-2xl bg-[#5CB2D4]/10 border border-[#5CB2D4]/30 space-y-1">
               <p className="text-[11px] font-bold uppercase tracking-wider text-[#274283]">Alcance / Resumen Ejecutivo del Servicio:</p>
-              <p className="text-xs text-slate-700 whitespace-pre-line leading-relaxed">{deal.briefNotes}</p>
+              <p className="text-xs text-slate-700 whitespace-pre-wrap break-words leading-relaxed">{deal.briefNotes}</p>
             </div>
           ) : deal.company?.briefNotes ? (
             <div className="p-4 rounded-2xl bg-[#5CB2D4]/10 border border-[#5CB2D4]/30 space-y-1">
               <p className="text-[11px] font-bold uppercase tracking-wider text-[#274283]">Alcance / Contexto del Cliente:</p>
-              <p className="text-xs text-slate-700 whitespace-pre-line leading-relaxed">{deal.company.briefNotes}</p>
+              <p className="text-xs text-slate-700 whitespace-pre-wrap break-words leading-relaxed">{deal.company.briefNotes}</p>
             </div>
           ) : null}
         </div>

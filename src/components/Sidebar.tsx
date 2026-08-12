@@ -53,9 +53,7 @@ export default function Sidebar({ user }: SidebarProps) {
       <aside className="hidden md:flex md:w-64 md:flex-col md:fixed md:inset-y-0 bg-[#274283] text-white z-30 shadow-xl">
         {/* Brand Header */}
         <div className="flex items-center gap-3 px-6 py-5 border-b border-white/10">
-          <div className="w-10 h-10 rounded-full bg-[#EB7638] flex items-center justify-center font-bold text-white shadow-md text-lg">
-            S
-          </div>
+          <img src="/logo-app.svg" alt="Sokka Logo" className="w-10 h-10 object-contain drop-shadow-md" />
           <div>
             <h1 className="font-display font-bold text-xl tracking-tight text-white leading-none">
               SOKKA CRM

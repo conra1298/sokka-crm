@@ -178,6 +178,20 @@ export default async function ContactsPage(props: {
                         <Mail className="w-3 h-3" />
                         <span>{contact.email}</span>
                       </div>
+                      {contact.contactTags && contact.contactTags.length > 0 && (
+                        <div className="flex flex-wrap gap-1 mt-1.5">
+                          {contact.contactTags.map((ct: any) => (
+                            <span
+                              key={ct.tag.id}
+                              className="px-1.5 py-0.5 rounded text-[10px] font-semibold text-white shadow-sm truncate max-w-[100px]"
+                              style={{ backgroundColor: ct.tag.color }}
+                              title={ct.tag.name}
+                            >
+                              {ct.tag.name}
+                            </span>
+                          ))}
+                        </div>
+                      )}
                     </td>
 
                     <td className="p-4">

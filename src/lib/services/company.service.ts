@@ -80,6 +80,11 @@ export async function listCompanies(
       owner: true,
       contacts: true,
       deals: true,
+      companyTags: {
+        with: {
+          tag: true,
+        },
+      },
     },
     orderBy: [desc(companies.createdAt)],
   });

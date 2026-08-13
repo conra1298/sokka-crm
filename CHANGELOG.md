@@ -5,6 +5,21 @@ El formato está basado en [Keep a Changelog](https://keepachangelog.com/es-ES/1
 
 ---
 
+## [1.0.2] - 2026-08-13
+
+### 🚀 Añadido (Feat)
+- **Producción**: Despliegue automatizado continuo vía Vercel conectado al repositorio de GitHub (`sokka-crm.vercel.app`).
+- **Limpieza de Entorno**: Nuevo script (`clear-data.ts`) ejecutado en Turso Cloud para purgar las oportunidades, empresas, contactos y tareas de prueba de Sokka, dejando el CRM limpio para su uso real manteniendo el catálogo y los usuarios.
+
+### 💄 Cambios (UI & UX)
+- **Inicio de Sesión**: Interfaz minimalista. Se removieron los botones de autocompletado para cuentas de prueba y se ajustó el branding (logo ampliado con leyenda "Evolucionando").
+
+### 🔧 Correcciones (Fixes)
+- **Vulnerabilidad**: Actualización de Next.js (`v16.3.0`) para solucionar el bloqueo de seguridad (CVE-2025-66478) emitido por Vercel durante el despliegue.
+- **Tipado**: Corrección de error de validación estricta de TypeScript en scripts de base de datos (`reset-users.ts`) que bloqueaban la compilación.
+
+---
+
 ## [1.0.1] - 2026-08-12
 
 ### 💄 Cambios (UI & UX)

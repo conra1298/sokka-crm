@@ -45,7 +45,7 @@ async function resetUsers() {
   if (existingUsers.length > newUsersData.length) {
     const mainAdminId = existingUsers[0].id;
     const excessUsers = existingUsers.slice(newUsersData.length);
-    const excessIds = excessUsers.map(u => u.id);
+    const excessIds = excessUsers.map((u: any) => u.id);
     
     console.log(`Reasignando registros de ${excessIds.length} usuarios sobrantes a ${newUsersData[0].name}...`);
     

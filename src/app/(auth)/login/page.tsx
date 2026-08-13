@@ -10,14 +10,7 @@ function LoginFormContent() {
   const redirectPath = searchParams.get('redirect') || '/dashboard';
   const [state, formAction, isPending] = useActionState(loginAction, null);
 
-  const fillCredentials = (email: string) => {
-    const emailInput = document.getElementById('email') as HTMLInputElement;
-    const passwordInput = document.getElementById('password') as HTMLInputElement;
-    if (emailInput && passwordInput) {
-      emailInput.value = email;
-      passwordInput.value = 'sokka2024';
-    }
-  };
+
 
   return (
     <div className="bg-white/90 backdrop-blur-md p-8 rounded-3xl border border-slate-200 shadow-xl">
@@ -79,36 +72,7 @@ function LoginFormContent() {
         </button>
       </form>
 
-      {/* Demo Users Quick Selector */}
-      <div className="mt-8 pt-6 border-t border-slate-200">
-        <p className="text-xs font-semibold text-slate-500 uppercase tracking-wider text-center mb-3">
-          Cuentas de Prueba (Clic para llenar)
-        </p>
-        <div className="grid grid-cols-3 gap-2">
-          <button
-            type="button"
-            onClick={() => fillCredentials('admin@sokka.com')}
-            className="px-2.5 py-1.5 rounded-lg bg-slate-100 hover:bg-[#274283] hover:text-white text-slate-700 text-xs font-medium transition text-center"
-          >
-            Administrador
-          </button>
-          <button
-            type="button"
-            onClick={() => fillCredentials('manager@sokka.com')}
-            className="px-2.5 py-1.5 rounded-lg bg-slate-100 hover:bg-[#274283] hover:text-white text-slate-700 text-xs font-medium transition text-center"
-          >
-            Gerente
-          </button>
-          <button
-            type="button"
-            onClick={() => fillCredentials('sales@sokka.com')}
-            className="px-2.5 py-1.5 rounded-lg bg-slate-100 hover:bg-[#274283] hover:text-white text-slate-700 text-xs font-medium transition text-center"
-          >
-            Vendedor
-          </button>
-        </div>
-        <p className="text-[11px] text-slate-400 text-center mt-2 font-mono">Contraseña para todas: sokka2024</p>
-      </div>
+
     </div>
   );
 }
@@ -119,10 +83,9 @@ export default function LoginPage() {
       <div className="w-full max-w-md">
         <div className="text-center mb-8">
           <div className="inline-flex items-center justify-center mb-4">
-            <img src="/logo-app.svg" alt="Sokka Logo" className="w-16 h-16 object-contain drop-shadow-xl" />
+            <img src="/logo-app.svg" alt="Sokka Logo" className="w-24 h-24 object-contain drop-shadow-xl" />
           </div>
-          <h1 className="font-display font-extrabold text-3xl text-[#274283]">SOKKA CRM</h1>
-          <p className="text-slate-600 text-sm mt-1">Gestión Estratégica de Ventas B2B</p>
+          <p className="font-display font-medium text-slate-500 tracking-[0.2em] uppercase text-sm mt-2">Evolucionando</p>
         </div>
 
         <Suspense fallback={<div className="p-8 text-center bg-white rounded-3xl border border-slate-200">Cargando inicio de sesión...</div>}>

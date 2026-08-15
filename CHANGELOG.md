@@ -5,6 +5,19 @@ El formato está basado en [Keep a Changelog](https://keepachangelog.com/es-ES/1
 
 ---
 
+## [1.0.6] - 2026-08-15
+
+### 🚀 Añadido (Feat)
+- **Filtro de Ordenamiento Rápido en Embudo**:
+  - Selector de ordenación por Ticket más alto (`$ Mayor valor`), Ticket más bajo (`$ Menor valor`), Más recientes (`Último agregado`) y Más antiguos.
+- **Modo Vista Compacta de Tarjetas**:
+  - Botón selector para alternar entre "Vista Detallada" y "Vista Compacta".
+  - En modo compacto, las tarjetas reducen su tamaño vertical en más del 60%, mostrando únicamente el Nombre de la Oportunidad, Empresa vinculada y Monto.
+- **Reordenamiento Manual Personalizado Libre**:
+  - Capacidad de arrastrar y soltar libremente las tarjetas para acomodarlas en cualquier orden dentro de la misma columna o entre diferentes etapas del embudo comercial (`@dnd-kit/sortable` con `arrayMove`).
+
+---
+
 ## [1.0.5] - 2026-08-15
 
 ### 🚀 Añadido (Feat)

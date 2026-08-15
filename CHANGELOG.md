@@ -5,6 +5,22 @@ El formato está basado en [Keep a Changelog](https://keepachangelog.com/es-ES/1
 
 ---
 
+## [1.0.3] - 2026-08-15
+
+### 🚀 Añadido (Feat)
+- **Módulo Dedicado 'Clientes Activos' (`/clients`)**:
+  - Nuevo acceso directo en el menú lateral principal con ícono de recurrencia (`RefreshCcw`).
+  - Panel ejecutivo con métricas de **MRR Total en ARS**, cantidad de cuentas activas y ticket promedio (ARPU).
+  - Tabla de seguimiento de servicios fijos/retainers con día de cobro/facturación, Account Manager asignado y accesos directos.
+  - Modal de alta rápida en 1 solo paso (`ClientCreateModal.tsx`) para cargar empresas y retainers sin necesidad de pasar por el embudo de prospección.
+  - Sincronización automática de estado de empresa a `Cliente Activo` (`clientStatus = 'active_client'`).
+  - Impacto directo en tiempo real sobre los KPIs comerciales del Dashboard.
+
+### 💄 Cambios (UI & UX)
+- **Embudo de Ventas**: Se mantuvo el foco exclusivo en prospección y negociación de nuevas oportunidades (vistas Tablero Kanban y Tabla).
+
+---
+
 ## [1.0.2] - 2026-08-13
 
 ### 🚀 Añadido (Feat)

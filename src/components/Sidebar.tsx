@@ -14,6 +14,7 @@ import {
   FileSpreadsheet,
   Tag,
   Package,
+  RefreshCcw,
 } from 'lucide-react';
 import { logoutAction } from '@/app/(auth)/login/actions';
 import { SessionUser } from '@/lib/services/auth.service';
@@ -30,6 +31,7 @@ export default function Sidebar({ user }: SidebarProps) {
     { label: 'Contactos', href: '/contacts', icon: Users },
     { label: 'Empresas', href: '/companies', icon: Building2 },
     { label: 'Embudo de Ventas', href: '/deals', icon: Kanban },
+    { label: 'Clientes Activos', href: '/clients', icon: RefreshCcw },
     { label: 'Tareas', href: '/tasks', icon: CheckSquare },
   ];
 

@@ -22,6 +22,8 @@ import {
 import { listTags, getCompanyTags } from '@/lib/services/tag.service';
 import CompanyBriefSection from './CompanyBriefSection';
 import CompanyTagsSection from './CompanyTagsSection';
+import CompanyHeaderActions from './CompanyHeaderActions';
+import { db } from '@/db';
 
 export default async function CompanyDetailPage(props: {
   params: Promise<{ id: string }>;
@@ -37,6 +39,10 @@ export default async function CompanyDetailPage(props: {
   const allTags = await listTags();
   const assignedCompanyTags = await getCompanyTags(company.id);
   const assignedTagIds = assignedCompanyTags.map((t: any) => t.id);
+
+  const usersList = await db.query.users.findMany({
+    where: (u: any, { eq }: any) => eq(u.isActive, true),
+  });
 
   const getStatusBadge = (status: string) => {
     switch (status) {
@@ -66,7 +72,9 @@ export default async function CompanyDetailPage(props: {
       <PageHeader
         title={company.name}
         subtitle={company.industry ? `Industria: ${company.industry}` : 'Ficha de Detalle de Empresa'}
-      />
+      >
+        <CompanyHeaderActions company={company} users={usersList} />
+      </PageHeader>
 
       <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
         {/* Left Column: Account Details & Linked Contacts */}

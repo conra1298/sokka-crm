@@ -5,6 +5,21 @@ El formato está basado en [Keep a Changelog](https://keepachangelog.com/es-ES/1
 
 ---
 
+## [1.0.4] - 2026-08-15
+
+### 🚀 Añadido (Feat)
+- **Edición Integral de Clientes Activos & Oportunidades**:
+  - Botón directo **"Editar"** en cada fila de la tabla de `/clients` para corregir nombre del servicio, fee ($ ARS), día de cobro, Account Manager y vincular empresas (solucionando registros desvinculados de *"Cliente Sin Empresa"*).
+  - Modal de edición completa en la ficha de detalle de oportunidades (`/deals/[id]`).
+- **Edición Integral de Empresas (`/companies/[id]`)**:
+  - Modal para modificar nombre, industria/rubro, sitio web, teléfono, redes sociales, estado de cliente y responsable asignado.
+- **Edición Integral de Contactos (`/contacts/[id]`)**:
+  - Modal para actualizar nombre, apellido, correo electrónico, teléfono, empresa vinculada, cargo y responsable.
+- **Integración de WhatsApp Directo**:
+  - Botón de acceso directo para abrir chat de WhatsApp con 1 clic en fichas de empresas y contactos con teléfono registrado.
+
+---
+
 ## [1.0.3] - 2026-08-15
 
 ### 🚀 Añadido (Feat)

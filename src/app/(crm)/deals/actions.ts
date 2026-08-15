@@ -56,16 +56,40 @@ export async function updateDealAction(prevState: any, formData: FormData) {
   try {
     const data: Record<string, any> = {};
     if (formData.has('briefNotes')) data.briefNotes = formData.get('briefNotes') as string;
-    if (formData.has('title')) data.title = formData.get('title') as string;
-    if (formData.has('value')) data.value = parseFloat(formData.get('value') as string);
-    if (formData.has('monthlyValue')) data.monthlyValue = parseFloat(formData.get('monthlyValue') as string);
+    if (formData.has('title')) data.title = (formData.get('title') as string).trim();
+    if (formData.has('value')) {
+      const val = formData.get('value') as string;
+      data.value = val ? parseFloat(val) : null;
+    }
+    if (formData.has('monthlyValue')) {
+      const mVal = formData.get('monthlyValue') as string;
+      data.monthlyValue = mVal ? parseFloat(mVal) : null;
+      if (data.monthlyValue && !data.value) data.value = data.monthlyValue;
+    }
     if (formData.has('dealType')) data.dealType = formData.get('dealType') as string;
     if (formData.has('leadSource')) data.leadSource = formData.get('leadSource') as string;
+    if (formData.has('companyId')) {
+      const cId = formData.get('companyId') as string;
+      data.companyId = cId && cId.trim() !== '' ? cId : null;
+    }
+    if (formData.has('contactId')) {
+      const ctId = formData.get('contactId') as string;
+      data.contactId = ctId && ctId.trim() !== '' ? ctId : null;
+    }
+    if (formData.has('ownerId')) {
+      const oId = formData.get('ownerId') as string;
+      data.ownerId = oId && oId.trim() !== '' ? oId : null;
+    }
+    if (formData.has('retainerRenewalDate')) data.retainerRenewalDate = formData.get('retainerRenewalDate') as string;
+    if (formData.has('retainerStartDate')) data.retainerStartDate = formData.get('retainerStartDate') as string;
+    if (formData.has('expectedCloseDate')) data.expectedCloseDate = formData.get('expectedCloseDate') as string;
 
     const updated = await updateDeal(id, data, user);
     revalidatePath(`/deals/${id}`);
     revalidatePath('/deals');
+    revalidatePath('/clients');
     revalidatePath('/dashboard');
+    revalidatePath('/companies');
     return { success: true, deal: updated };
   } catch (err: any) {
     return { error: err.message || 'Error al actualizar la oportunidad.' };

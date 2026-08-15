@@ -9,6 +9,7 @@ import EmptyState from '@/components/EmptyState';
 import { FilterSelect } from '@/components/FilterSelect';
 import { formatCurrency, formatDate } from '@/lib/utils/normalization';
 import ClientCreateModal from './ClientCreateModal';
+import ClientsTableActions from './ClientsTableActions';
 import {
   RefreshCcw,
   Plus,
@@ -295,15 +296,12 @@ export default async function ClientsPage(props: {
 
                     {/* Acciones */}
                     <td className="p-4 pr-6 text-right">
-                      <div className="flex items-center justify-end gap-2">
-                        <Link
-                          href={`/deals/${client.id}`}
-                          className="px-3 py-1.5 rounded-lg bg-slate-100 hover:bg-[#274283] hover:text-white text-slate-700 text-xs font-semibold transition flex items-center gap-1"
-                        >
-                          <span>Ficha</span>
-                          <ArrowUpRight className="w-3.5 h-3.5" />
-                        </Link>
-                      </div>
+                      <ClientsTableActions
+                        deal={client}
+                        companies={companiesList}
+                        contacts={contactsList}
+                        users={usersList}
+                      />
                     </td>
                   </tr>
                 ))}

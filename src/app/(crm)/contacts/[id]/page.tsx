@@ -25,6 +25,8 @@ import {
 
 import { listTags, getContactTags } from '@/lib/services/tag.service';
 import ContactTagsSection from './ContactTagsSection';
+import ContactHeaderActions from './ContactHeaderActions';
+import { db } from '@/db';
 
 export default async function ContactDetailPage(props: {
   params: Promise<{ id: string }>;
@@ -40,6 +42,15 @@ export default async function ContactDetailPage(props: {
   const allTags = await listTags();
   const assignedContactTags = await getContactTags(contact.id);
   const assignedTagIds = assignedContactTags.map((t: any) => t.id);
+
+  const companiesList = await db.query.companies.findMany({
+    where: (c: any, { eq }: any) => eq(c.isArchived, false),
+    orderBy: (c: any, { asc }: any) => [asc(c.name)],
+  });
+
+  const usersList = await db.query.users.findMany({
+    where: (u: any, { eq }: any) => eq(u.isActive, true),
+  });
 
   return (
     <div className="space-y-8">
@@ -59,15 +70,22 @@ export default async function ContactDetailPage(props: {
         title={`${contact.firstName} ${contact.lastName}`}
         subtitle={contact.jobTitle ? `${contact.jobTitle} ${contact.company ? `en ${contact.company.name}` : ''}` : 'Ficha de Detalle del Contacto'}
       >
-        {contact.duplicates && contact.duplicates.length > 0 && user.role === 'admin' && (
-          <Link
-            href={`/contacts/merge?targetId=${contact.id}`}
-            className="btn-primary bg-[#EB7638] hover:bg-[#d46529] text-white flex items-center gap-2 text-sm shadow-md"
-          >
-            <GitMerge className="w-4 h-4" />
-            <span>Fusionar Registros Duplicados</span>
-          </Link>
-        )}
+        <div className="flex items-center gap-2">
+          <ContactHeaderActions
+            contact={contact}
+            companies={companiesList}
+            users={usersList}
+          />
+          {contact.duplicates && contact.duplicates.length > 0 && user.role === 'admin' && (
+            <Link
+              href={`/contacts/merge?targetId=${contact.id}`}
+              className="btn-primary bg-[#EB7638] hover:bg-[#d46529] text-white flex items-center gap-2 text-sm shadow-md"
+            >
+              <GitMerge className="w-4 h-4" />
+              <span>Fusionar</span>
+            </Link>
+          )}
+        </div>
       </PageHeader>
 
       {/* Duplicate Alert Banner */}

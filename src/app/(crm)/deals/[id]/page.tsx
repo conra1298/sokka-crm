@@ -23,6 +23,7 @@ import {
 
 import DealBriefSection from './DealBriefSection';
 import DealServiceItemsSection from './DealServiceItemsSection';
+import DealHeaderActions from './DealHeaderActions';
 import { listServices, getDealServiceItems } from '@/lib/services/service-catalog.service';
 
 export default async function DealDetailPage(props: {
@@ -38,6 +39,20 @@ export default async function DealDetailPage(props: {
 
   const allStages = await db.query.pipelineStages.findMany({
     orderBy: (s: any, { asc }: any) => [asc(s.displayOrder)],
+  });
+
+  const companiesList = await db.query.companies.findMany({
+    where: (c: any, { eq }: any) => eq(c.isArchived, false),
+    orderBy: (c: any, { asc }: any) => [asc(c.name)],
+  });
+
+  const contactsList = await db.query.contacts.findMany({
+    where: (c: any, { eq }: any) => eq(c.isArchived, false),
+    orderBy: (c: any, { asc }: any) => [asc(c.firstName)],
+  });
+
+  const usersList = await db.query.users.findMany({
+    where: (u: any, { eq }: any) => eq(u.isActive, true),
   });
 
   const catalogServices = await listServices({ activeOnly: true });
@@ -61,18 +76,25 @@ export default async function DealDetailPage(props: {
     <div className="space-y-8">
       <div>
         <Link
-          href="/deals"
+          href={deal.dealType === 'retainer' ? '/clients' : '/deals'}
           className="inline-flex items-center gap-1.5 text-xs font-semibold text-[#274283] hover:underline"
         >
           <ArrowLeft className="w-4 h-4" />
-          <span>Volver al Tablero de Oportunidades</span>
+          <span>{deal.dealType === 'retainer' ? 'Volver a Clientes Activos' : 'Volver al Tablero de Oportunidades'}</span>
         </Link>
       </div>
 
       <PageHeader
         title={deal.title}
         subtitle={`${deal.dealType === 'retainer' ? `Retainer Mensual: ${formatCurrency(deal.monthlyValue || deal.value)}/mes` : `Proyecto Único: ${formatCurrency(deal.value)}`}${deal.leadSource ? ` · Origen: ${getLeadSourceLabel(deal.leadSource)}` : ''}`}
-      />
+      >
+        <DealHeaderActions
+          deal={deal}
+          companies={companiesList}
+          contacts={contactsList}
+          users={usersList}
+        />
+      </PageHeader>
 
       <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
         {/* Left Column: Deal Metadata Card */}

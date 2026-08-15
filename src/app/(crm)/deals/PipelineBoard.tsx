@@ -1,6 +1,6 @@
 'use client';
 
-import { useState } from 'react';
+import { useState, useRef } from 'react';
 import Link from 'next/link';
 import {
   DndContext,
@@ -57,10 +57,47 @@ export default function PipelineBoard({ stages, initialDeals, userRole }: Pipeli
   const [activeDeal, setActiveDeal] = useState<Deal | null>(null);
   const [errorNotice, setErrorNotice] = useState<string | null>(null);
 
+  // Drag-to-scroll container state
+  const scrollContainerRef = useRef<HTMLDivElement>(null);
+  const [isPanning, setIsPanning] = useState(false);
+  const [startX, setStartX] = useState(0);
+  const [scrollLeftState, setScrollLeftState] = useState(0);
+
+  const handleMouseDown = (e: React.MouseEvent<HTMLDivElement>) => {
+    if (e.button !== 0) return;
+    const target = e.target as HTMLElement;
+    if (
+      target.closest('[data-draggable="true"]') ||
+      target.closest('.cursor-grab') ||
+      target.closest('a') ||
+      target.closest('button') ||
+      target.closest('input')
+    ) {
+      return;
+    }
+
+    if (!scrollContainerRef.current) return;
+    setIsPanning(true);
+    setStartX(e.pageX - scrollContainerRef.current.offsetLeft);
+    setScrollLeftState(scrollContainerRef.current.scrollLeft);
+  };
+
+  const handleMouseMove = (e: React.MouseEvent<HTMLDivElement>) => {
+    if (!isPanning || !scrollContainerRef.current) return;
+    e.preventDefault();
+    const x = e.pageX - scrollContainerRef.current.offsetLeft;
+    const walk = (x - startX) * 1.35;
+    scrollContainerRef.current.scrollLeft = scrollLeftState - walk;
+  };
+
+  const handleMouseUpOrLeave = () => {
+    setIsPanning(false);
+  };
+
   const sensors = useSensors(
     useSensor(PointerSensor, {
       activationConstraint: {
-        distance: 3,
+        distance: 4,
       },
     }),
     useSensor(KeyboardSensor)
@@ -126,7 +163,17 @@ export default function PipelineBoard({ stages, initialDeals, userRole }: Pipeli
         onDragStart={handleDragStart}
         onDragEnd={handleDragEnd}
       >
-        <div className="flex gap-4 overflow-x-auto pb-6 min-h-[650px] items-stretch">
+        <div
+          ref={scrollContainerRef}
+          onMouseDown={handleMouseDown}
+          onMouseMove={handleMouseMove}
+          onMouseUp={handleMouseUpOrLeave}
+          onMouseLeave={handleMouseUpOrLeave}
+          className={`flex gap-4 overflow-x-auto pb-6 min-h-[650px] items-stretch select-none transition-colors ${
+            isPanning ? 'cursor-grabbing' : 'cursor-grab'
+          }`}
+          style={{ scrollBehavior: isPanning ? 'auto' : 'smooth' }}
+        >
           {stages.map((stage) => {
             const stageDeals = deals.filter((d) => d.stageId === stage.id);
             const totalStageValue = stageDeals.reduce((sum, d) => sum + Number(d.value || 0), 0);

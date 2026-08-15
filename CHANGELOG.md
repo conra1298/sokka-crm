@@ -5,6 +5,15 @@ El formato está basado en [Keep a Changelog](https://keepachangelog.com/es-ES/1
 
 ---
 
+## [1.0.5] - 2026-08-15
+
+### 🚀 Añadido (Feat)
+- **Desplazamiento Horizontal por Arrastre en Tablero Kanban (Drag-to-Scroll)**:
+  - Posibilidad de arrastrar con clic sostenido sobre cualquier fondo o espacio libre del tablero de oportunidades para desplazarse horizontalmente a lo largo de las etapas sin tener que bajar a buscar la barra de scroll inferior.
+  - Indicador de cursor intuitivo (`grab` / `grabbing`).
+
+---
+
 ## [1.0.4] - 2026-08-15
 
 ### 🚀 Añadido (Feat)

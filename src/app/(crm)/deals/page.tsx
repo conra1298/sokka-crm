@@ -12,6 +12,7 @@ import { formatCurrency, formatDate } from '@/lib/utils/normalization';
 import {
   Kanban,
   LayoutList,
+  RefreshCcw,
   Plus,
   Search,
   Building2,
@@ -23,7 +24,7 @@ import {
 
 export default async function DealsPage(props: {
   searchParams?: Promise<{
-    view?: 'board' | 'table';
+    view?: 'board' | 'table' | 'retainers';
     search?: string;
     ownerId?: string;
     action?: string;
@@ -124,13 +125,93 @@ export default async function DealsPage(props: {
               <LayoutList className="w-3.5 h-3.5" />
               <span>Tabla</span>
             </Link>
+            <Link
+              href={`/deals?view=retainers${search ? `&search=${search}` : ''}`}
+              className={`px-3 py-1.5 rounded-lg text-xs font-semibold flex items-center gap-1.5 transition ${
+                viewMode === 'retainers' ? 'bg-white text-[#274283] shadow-sm' : 'text-slate-600'
+              }`}
+            >
+              <RefreshCcw className="w-3.5 h-3.5" />
+              <span>Servicios Activos</span>
+            </Link>
           </div>
         </div>
       </div>
 
-      {/* Main View: Board or Table */}
+      {/* Main View: Board, Table, or Retainers */}
       {viewMode === 'board' ? (
         <PipelineBoard stages={stages} initialDeals={dealsList as any} userRole={user.role} />
+      ) : viewMode === 'retainers' ? (
+        (() => {
+          const activeRetainers = dealsList.filter((deal: any) => deal.dealType === 'retainer' && deal.stage?.isWon);
+          return (
+            <div className="bg-white rounded-2xl border border-slate-200 shadow-sm overflow-hidden">
+              <table className="w-full text-left text-sm">
+                <thead className="bg-slate-50 border-b text-xs font-bold uppercase text-slate-500">
+                  <tr>
+                    <th className="p-4 pl-6">Cliente / Empresa</th>
+                    <th className="p-4">Servicio Continuo</th>
+                    <th className="p-4 text-right">MRR (ARS)</th>
+                    <th className="p-4">Account Manager</th>
+                    <th className="p-4">Renovación</th>
+                    <th className="p-4 pr-6 text-right">Acciones</th>
+                  </tr>
+                </thead>
+                <tbody className="divide-y divide-slate-100">
+                  {activeRetainers.length === 0 ? (
+                    <tr>
+                      <td colSpan={6} className="p-8 text-center text-slate-500">
+                        No hay servicios continuos activos actualmente.
+                      </td>
+                    </tr>
+                  ) : (
+                    activeRetainers.map((deal: any) => (
+                      <tr key={deal.id} className="hover:bg-slate-50">
+                        <td className="p-4 pl-6">
+                          <Link
+                            href={deal.company ? `/companies/${deal.company.id}` : '#'}
+                            className="font-semibold text-slate-800 hover:text-[#274283] flex items-center gap-2"
+                          >
+                            <Building2 className="w-4 h-4 text-slate-400" />
+                            <span>{deal.company?.name || '—'}</span>
+                          </Link>
+                        </td>
+                        <td className="p-4 font-semibold text-[#274283]">
+                          <Link href={`/deals/${deal.id}`} className="hover:underline">
+                            {deal.title}
+                          </Link>
+                        </td>
+                        <td className="p-4 text-right font-bold text-emerald-600">
+                          {formatCurrency(deal.monthlyValue || 0)}
+                        </td>
+                        <td className="p-4 text-slate-700">
+                          <div className="flex items-center gap-2">
+                            <User className="w-3.5 h-3.5 text-slate-400" />
+                            <span>{deal.owner?.name}</span>
+                          </div>
+                        </td>
+                        <td className="p-4 text-xs font-mono text-slate-500">
+                          <div className="flex items-center gap-1.5">
+                            <Calendar className="w-3.5 h-3.5" />
+                            <span>{deal.retainerRenewalDate ? formatDate(deal.retainerRenewalDate) : '—'}</span>
+                          </div>
+                        </td>
+                        <td className="p-4 pr-6 text-right">
+                          <Link
+                            href={`/deals/${deal.id}`}
+                            className="text-xs font-semibold text-[#274283] hover:underline"
+                          >
+                            Ver Ficha →
+                          </Link>
+                        </td>
+                      </tr>
+                    ))
+                  )}
+                </tbody>
+              </table>
+            </div>
+          );
+        })()
       ) : (
         <div className="bg-white rounded-2xl border border-slate-200 shadow-sm overflow-hidden">
           <table className="w-full text-left text-sm">

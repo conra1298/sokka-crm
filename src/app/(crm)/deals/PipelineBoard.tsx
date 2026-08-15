@@ -60,38 +60,51 @@ export default function PipelineBoard({ stages, initialDeals, userRole }: Pipeli
   // Drag-to-scroll container state
   const scrollContainerRef = useRef<HTMLDivElement>(null);
   const [isPanning, setIsPanning] = useState(false);
-  const [startX, setStartX] = useState(0);
-  const [scrollLeftState, setScrollLeftState] = useState(0);
+  const isPanningRef = useRef(false);
+  const startXRef = useRef(0);
+  const scrollLeftRef = useRef(0);
 
   const handleMouseDown = (e: React.MouseEvent<HTMLDivElement>) => {
+    // Only primary (left) button
     if (e.button !== 0) return;
+
     const target = e.target as HTMLElement;
+    // Check if clicked inside a deal card or interactive element
     if (
-      target.closest('[data-draggable="true"]') ||
-      target.closest('.cursor-grab') ||
+      target.closest('[data-deal-card="true"]') ||
       target.closest('a') ||
       target.closest('button') ||
-      target.closest('input')
+      target.closest('input') ||
+      target.closest('select') ||
+      target.closest('textarea')
     ) {
       return;
     }
 
     if (!scrollContainerRef.current) return;
+
+    isPanningRef.current = true;
+    startXRef.current = e.pageX - scrollContainerRef.current.offsetLeft;
+    scrollLeftRef.current = scrollContainerRef.current.scrollLeft;
     setIsPanning(true);
-    setStartX(e.pageX - scrollContainerRef.current.offsetLeft);
-    setScrollLeftState(scrollContainerRef.current.scrollLeft);
-  };
 
-  const handleMouseMove = (e: React.MouseEvent<HTMLDivElement>) => {
-    if (!isPanning || !scrollContainerRef.current) return;
-    e.preventDefault();
-    const x = e.pageX - scrollContainerRef.current.offsetLeft;
-    const walk = (x - startX) * 1.35;
-    scrollContainerRef.current.scrollLeft = scrollLeftState - walk;
-  };
+    const handleGlobalMouseMove = (moveEvent: MouseEvent) => {
+      if (!isPanningRef.current || !scrollContainerRef.current) return;
+      moveEvent.preventDefault();
+      const x = moveEvent.pageX - scrollContainerRef.current.offsetLeft;
+      const walk = (x - startXRef.current) * 1.5;
+      scrollContainerRef.current.scrollLeft = scrollLeftRef.current - walk;
+    };
 
-  const handleMouseUpOrLeave = () => {
-    setIsPanning(false);
+    const handleGlobalMouseUp = () => {
+      isPanningRef.current = false;
+      setIsPanning(false);
+      window.removeEventListener('mousemove', handleGlobalMouseMove);
+      window.removeEventListener('mouseup', handleGlobalMouseUp);
+    };
+
+    window.addEventListener('mousemove', handleGlobalMouseMove, { passive: false });
+    window.addEventListener('mouseup', handleGlobalMouseUp);
   };
 
   const sensors = useSensors(
@@ -166,13 +179,10 @@ export default function PipelineBoard({ stages, initialDeals, userRole }: Pipeli
         <div
           ref={scrollContainerRef}
           onMouseDown={handleMouseDown}
-          onMouseMove={handleMouseMove}
-          onMouseUp={handleMouseUpOrLeave}
-          onMouseLeave={handleMouseUpOrLeave}
           className={`flex gap-4 overflow-x-auto pb-6 min-h-[650px] items-stretch select-none transition-colors ${
             isPanning ? 'cursor-grabbing' : 'cursor-grab'
           }`}
-          style={{ scrollBehavior: isPanning ? 'auto' : 'smooth' }}
+          style={{ scrollBehavior: 'auto' }}
         >
           {stages.map((stage) => {
             const stageDeals = deals.filter((d) => d.stageId === stage.id);
@@ -228,14 +238,14 @@ function StageColumn({
         }`}
       >
         <div className="flex items-center justify-between gap-2">
-          <h3 className="font-display font-bold text-sm text-slate-800 truncate">
+          <span className="font-display font-bold text-sm text-slate-800 truncate">
             {stage.name}
-          </h3>
-          <span className="px-2 py-0.5 rounded-full text-xs font-bold bg-white/80 text-slate-700 shadow-2xs">
+          </span>
+          <span className="px-2 py-0.5 rounded-full text-xs font-bold bg-slate-200/70 text-slate-700">
             {stageDeals.length}
           </span>
         </div>
-        <p className="font-display font-bold text-sm text-[#274283] mt-2">
+        <p className="text-xs font-bold text-[#274283] mt-2">
           {formatCurrency(totalStageValue)}
         </p>
       </div>
@@ -267,7 +277,14 @@ function SortableDealCard({ deal }: { deal: Deal }) {
   };
 
   return (
-    <div ref={setNodeRef} style={style} {...attributes} {...listeners} className="touch-none cursor-grab active:cursor-grabbing">
+    <div
+      ref={setNodeRef}
+      style={style}
+      {...attributes}
+      {...listeners}
+      data-deal-card="true"
+      className="touch-none cursor-grab active:cursor-grabbing"
+    >
       <DealCardCard deal={deal} />
     </div>
   );

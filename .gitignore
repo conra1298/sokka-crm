@@ -29,3 +29,6 @@ yarn-error.log*
 
 .vercel
 .env*
+
+# Agent Context
+.agents

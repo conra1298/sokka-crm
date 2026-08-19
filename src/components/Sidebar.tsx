@@ -15,6 +15,7 @@ import {
   Tag,
   Package,
   RefreshCcw,
+  Wallet,
 } from 'lucide-react';
 import { logoutAction } from '@/app/(auth)/login/actions';
 import { SessionUser } from '@/lib/services/auth.service';
@@ -36,6 +37,7 @@ export default function Sidebar({ user }: SidebarProps) {
   ];
 
   const adminItems = [
+    { label: 'Finanzas', href: '/finances', icon: Wallet },
     { label: 'Importar CSV', href: '/contacts/import', icon: FileSpreadsheet },
     { label: 'Catálogo Servicios', href: '/settings/services', icon: Package },
     { label: 'Etiquetas Globales', href: '/settings/tags', icon: Tag },

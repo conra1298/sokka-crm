@@ -306,6 +306,41 @@ export const dealServiceItems = sqliteTable('deal_service_items', {
   createdAt: timestampCol('created_at').notNull(),
 });
 
+// 16. Transaction Categories Table
+export const transactionCategories = sqliteTable('transaction_categories', {
+  id: uuidCol('id').primaryKey(),
+  name: text('name').notNull(),
+  type: text('type').notNull(), // 'income' | 'expense'
+  color: text('color').default('#5CB2D4').notNull(),
+  createdAt: timestampCol('created_at').notNull(),
+});
+
+// 17. Transactions Table (Finances)
+export const transactions = sqliteTable('transactions', {
+  id: uuidCol('id').primaryKey(),
+  type: text('type').notNull(), // 'income' | 'expense'
+  amount: real('amount').notNull(),
+  date: text('date'), // payment date
+  periodMonth: integer('period_month'), // 1-12
+  periodYear: integer('period_year'), // e.g. 2025
+  status: text('status').default('pending').notNull(), // 'pending', 'paid', 'cancelled'
+  billingStatus: text('billing_status').default('unbilled'), // 'unbilled', 'billed'
+  notes: text('notes'),
+  
+  // Relations
+  companyId: text('company_id').references(() => companies.id, { onDelete: 'set null' }),
+  dealId: text('deal_id').references(() => deals.id, { onDelete: 'set null' }),
+  categoryId: text('category_id').references(() => transactionCategories.id, { onDelete: 'set null' }),
+  
+  createdAt: timestampCol('created_at').notNull(),
+  updatedAt: timestampCol('updated_at').notNull(),
+}, (table) => [
+  index('transactions_company_idx').on(table.companyId),
+  index('transactions_deal_idx').on(table.dealId),
+  index('transactions_category_idx').on(table.categoryId),
+  index('transactions_date_idx').on(table.date),
+]);
+
 // RELATIONS DEFINITIONS
 
 export const usersRelations = relations(users, ({ many }) => ({
@@ -326,6 +361,7 @@ export const companiesRelations = relations(companies, ({ one, many }) => ({
   deals: many(deals),
   activities: many(activities),
   companyTags: many(companyTags),
+  transactions: many(transactions),
 }));
 
 export const contactsRelations = relations(contacts, ({ one, many }) => ({
@@ -372,6 +408,7 @@ export const dealsRelations = relations(deals, ({ one, many }) => ({
   activities: many(activities),
   tasks: many(tasks),
   serviceItems: many(dealServiceItems),
+  transactions: many(transactions),
 }));
 
 export const activitiesRelations = relations(activities, ({ one }) => ({
@@ -462,6 +499,25 @@ export const dealServiceItemsRelations = relations(dealServiceItems, ({ one }) =
   service: one(services, {
     fields: [dealServiceItems.serviceId],
     references: [services.id],
+  }),
+}));
+
+export const transactionCategoriesRelations = relations(transactionCategories, ({ many }) => ({
+  transactions: many(transactions),
+}));
+
+export const transactionsRelations = relations(transactions, ({ one }) => ({
+  company: one(companies, {
+    fields: [transactions.companyId],
+    references: [companies.id],
+  }),
+  deal: one(deals, {
+    fields: [transactions.dealId],
+    references: [deals.id],
+  }),
+  category: one(transactionCategories, {
+    fields: [transactions.categoryId],
+    references: [transactionCategories.id],
   }),
 }));
 

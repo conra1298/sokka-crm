@@ -13,6 +13,7 @@ import {
   MoreHorizontal,
   Edit2,
   Trash2,
+  X,
 } from 'lucide-react';
 import FinancesDashboard from './FinancesDashboard';
 import TransactionModal from './TransactionModal';
@@ -55,6 +56,8 @@ export default function FinancesClient({ initialTransactions, categories, compan
   };
 
   const months = ['Enero', 'Febrero', 'Marzo', 'Abril', 'Mayo', 'Junio', 'Julio', 'Agosto', 'Septiembre', 'Octubre', 'Noviembre', 'Diciembre'];
+
+  const [selectedNote, setSelectedNote] = useState<any>(null);
 
   return (
     <div className="space-y-6">
@@ -173,25 +176,54 @@ export default function FinancesClient({ initialTransactions, categories, compan
                     <td className="px-6 py-4">{t.date || '-'}</td>
                     <td className="px-6 py-4 font-medium text-gray-900">{formatCurrency(t.amount)}</td>
                     <td className="px-6 py-4">
-                      <span className={`inline-flex rounded-full px-2 py-1 text-xs font-semibold ${
-                        t.status === 'paid' ? 'bg-green-100 text-green-700' :
-                        t.status === 'pending' ? 'bg-yellow-100 text-yellow-700' :
-                        'bg-gray-100 text-gray-700'
-                      }`}>
-                        {t.status === 'paid' ? 'Pagado' : t.status === 'pending' ? 'Pendiente' : 'Cancelado'}
-                      </span>
+                      {t.status === 'paid' && (
+                        <span className="inline-flex rounded-full bg-green-100 px-2.5 py-1 text-xs font-semibold text-green-700">
+                          Pagado
+                        </span>
+                      )}
+                      {t.status === 'partial' && (
+                        <div className="flex flex-col gap-0.5">
+                          <span className="inline-flex rounded-full bg-amber-100 px-2.5 py-1 text-xs font-semibold text-amber-800">
+                            Parcial: {formatCurrency(t.paidAmount || 0)}
+                          </span>
+                          <span className="text-[10px] text-gray-500">
+                            Resta: {formatCurrency(Math.max(0, (t.amount || 0) - (t.paidAmount || 0)))}
+                          </span>
+                        </div>
+                      )}
+                      {t.status === 'pending' && (
+                        <span className="inline-flex rounded-full bg-yellow-100 px-2.5 py-1 text-xs font-semibold text-yellow-700">
+                          Pendiente
+                        </span>
+                      )}
+                      {t.status === 'cancelled' && (
+                        <span className="inline-flex rounded-full bg-gray-100 px-2.5 py-1 text-xs font-semibold text-gray-700">
+                          Suspendido
+                        </span>
+                      )}
                     </td>
                     {activeTab === 'income' && (
                       <td className="px-6 py-4">
-                        <span className={`inline-flex rounded-full px-2 py-1 text-xs font-semibold ${
+                        <span className={`inline-flex rounded-full px-2.5 py-1 text-xs font-semibold ${
                           t.billingStatus === 'billed' ? 'bg-blue-100 text-blue-700' : 'bg-gray-100 text-gray-700'
                         }`}>
                           {t.billingStatus === 'billed' ? 'Facturado' : 'No Facturado'}
                         </span>
                       </td>
                     )}
-                    <td className="px-6 py-4 truncate max-w-[200px]" title={t.notes || ''}>
-                      {t.notes || '-'}
+                    <td className="px-6 py-4 max-w-[220px]">
+                      {t.notes ? (
+                        <button
+                          type="button"
+                          onClick={() => setSelectedNote(t)}
+                          title="Clic para ver nota completa"
+                          className="flex items-center gap-1.5 rounded-lg border border-gray-200 bg-gray-50 px-2.5 py-1 text-xs text-gray-700 hover:border-sokka-blue hover:bg-blue-50/50 hover:text-sokka-blue transition max-w-full"
+                        >
+                          <span className="truncate">{t.notes}</span>
+                        </button>
+                      ) : (
+                        <span className="text-gray-400 text-xs">-</span>
+                      )}
                     </td>
                     <td className="px-6 py-4 text-right">
                       <button onClick={() => handleEdit(t)} className="text-blue-600 hover:text-blue-900 mr-3">
@@ -266,6 +298,51 @@ export default function FinancesClient({ initialTransactions, categories, compan
           onClose={() => setIsModalOpen(false)}
           onSave={onSave}
         />
+      )}
+
+      {selectedNote && (
+        <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/50 p-4">
+          <div className="w-full max-w-md rounded-2xl bg-white p-6 shadow-xl space-y-4">
+            <div className="flex items-center justify-between border-b border-gray-100 pb-3">
+              <h3 className="text-base font-semibold text-gray-900">
+                Observaciones y Aclaraciones
+              </h3>
+              <button
+                onClick={() => setSelectedNote(null)}
+                className="rounded-full p-1.5 hover:bg-gray-100 text-gray-400 hover:text-gray-600 transition"
+              >
+                <X className="h-5 w-5" />
+              </button>
+            </div>
+            
+            <div className="text-xs text-gray-500 space-y-1">
+              <p>
+                <span className="font-medium text-gray-700">Registro:</span>{' '}
+                {selectedNote.type === 'income'
+                  ? companies.find((c: any) => c.id === selectedNote.companyId)?.name || 'Cliente'
+                  : categories.find((c: any) => c.id === selectedNote.categoryId)?.name || 'Gasto'}
+              </p>
+              <p>
+                <span className="font-medium text-gray-700">Período:</span>{' '}
+                {selectedNote.periodMonth ? months[selectedNote.periodMonth - 1] : ''} {selectedNote.periodYear} |{' '}
+                <span className="font-medium text-gray-700">Monto:</span> {formatCurrency(selectedNote.amount)}
+              </p>
+            </div>
+
+            <div className="rounded-xl bg-gray-50 p-4 border border-gray-200/80 text-sm text-gray-800 whitespace-pre-wrap max-h-60 overflow-y-auto leading-relaxed">
+              {selectedNote.notes}
+            </div>
+
+            <div className="flex justify-end pt-2">
+              <button
+                onClick={() => setSelectedNote(null)}
+                className="rounded-lg bg-gray-100 px-4 py-2 text-sm font-medium text-gray-700 hover:bg-gray-200 transition"
+              >
+                Cerrar
+              </button>
+            </div>
+          </div>
+        </div>
       )}
     </div>
   );

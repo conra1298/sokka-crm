@@ -70,8 +70,12 @@ export default function FinancesDashboard({
 
   const yearIncomesPaid = useMemo(() => {
     return yearTransactions
-      .filter((t) => t.type === 'income' && t.status === 'paid')
-      .reduce((sum, t) => sum + (t.amount || 0), 0);
+      .filter((t) => t.type === 'income')
+      .reduce((sum, t) => {
+        if (t.status === 'paid') return sum + (t.amount || 0);
+        if (t.status === 'partial') return sum + (t.paidAmount || 0);
+        return sum;
+      }, 0);
   }, [yearTransactions]);
 
   const yearExpenses = useMemo(() => {
@@ -89,12 +93,20 @@ export default function FinancesDashboard({
       const monthTxs = yearTransactions.filter((t) => t.periodMonth === monthNum);
 
       const incomePaid = monthTxs
-        .filter((t) => t.type === 'income' && t.status === 'paid')
-        .reduce((sum, t) => sum + (t.amount || 0), 0);
+        .filter((t) => t.type === 'income')
+        .reduce((sum, t) => {
+          if (t.status === 'paid') return sum + (t.amount || 0);
+          if (t.status === 'partial') return sum + (t.paidAmount || 0);
+          return sum;
+        }, 0);
 
       const incomePending = monthTxs
-        .filter((t) => t.type === 'income' && t.status === 'pending')
-        .reduce((sum, t) => sum + (t.amount || 0), 0);
+        .filter((t) => t.type === 'income')
+        .reduce((sum, t) => {
+          if (t.status === 'pending') return sum + (t.amount || 0);
+          if (t.status === 'partial') return sum + Math.max(0, (t.amount || 0) - (t.paidAmount || 0));
+          return sum;
+        }, 0);
 
       const expense = monthTxs
         .filter((t) => t.type === 'expense')
@@ -122,13 +134,17 @@ export default function FinancesDashboard({
         (t.periodYear || currentYear) === selectedYear
     );
 
-    const paid = monthTxs
-      .filter((t) => t.status === 'paid')
-      .reduce((sum, t) => sum + (t.amount || 0), 0);
+    const paid = monthTxs.reduce((sum, t) => {
+      if (t.status === 'paid') return sum + (t.amount || 0);
+      if (t.status === 'partial') return sum + (t.paidAmount || 0);
+      return sum;
+    }, 0);
 
-    const pending = monthTxs
-      .filter((t) => t.status === 'pending')
-      .reduce((sum, t) => sum + (t.amount || 0), 0);
+    const pending = monthTxs.reduce((sum, t) => {
+      if (t.status === 'pending') return sum + (t.amount || 0);
+      if (t.status === 'partial') return sum + Math.max(0, (t.amount || 0) - (t.paidAmount || 0));
+      return sum;
+    }, 0);
 
     const total = paid + pending;
     const percentPaid = total > 0 ? Math.round((paid / total) * 100) : 0;
@@ -142,7 +158,8 @@ export default function FinancesDashboard({
       percentPending,
       count: monthTxs.length,
       paidCount: monthTxs.filter((t) => t.status === 'paid').length,
-      pendingCount: monthTxs.filter((t) => t.status === 'pending').length,
+      partialCount: monthTxs.filter((t) => t.status === 'partial').length,
+      pendingCount: monthTxs.filter((t) => t.status === 'pending' || t.status === 'partial').length,
     };
   }, [transactions, selectedMonth, selectedYear, currentYear]);
 

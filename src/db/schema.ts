@@ -320,10 +320,11 @@ export const transactions = sqliteTable('transactions', {
   id: uuidCol('id').primaryKey(),
   type: text('type').notNull(), // 'income' | 'expense'
   amount: real('amount').notNull(),
+  paidAmount: real('paid_amount'), // actual collected amount for partial payments
   date: text('date'), // payment date
   periodMonth: integer('period_month'), // 1-12
   periodYear: integer('period_year'), // e.g. 2025
-  status: text('status').default('pending').notNull(), // 'pending', 'paid', 'cancelled'
+  status: text('status').default('pending').notNull(), // 'pending', 'paid', 'partial', 'cancelled'
   billingStatus: text('billing_status').default('unbilled'), // 'unbilled', 'billed'
   notes: text('notes'),
   

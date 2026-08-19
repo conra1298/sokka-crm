@@ -17,6 +17,8 @@ El formato está basado en [Keep a Changelog](https://keepachangelog.com/es-ES/1
     - **Tarjetas KPI**: Resumen anual de ingresos, gastos, margen neto operativo y total por cobrar del mes.
   - **Control de Cobranzas e Ingresos**:
     - Registro detallado por cliente, período (mes/año), fecha de pago, monto ($ ARS), estado de pago y estado de facturación.
+    - **Soporte de Pagos Parciales**: Registro de anticipos y cobros fraccionados, calculando automáticamente el saldo restante y reflejando el monto efectivamente cobrado en las métricas.
+    - **Visualizador Expandible de Observaciones**: Visualización completa y detallada de notas y acuerdos de pago mediante ventana modal interactiva sin cortes de texto.
   - **Control de Egresos y Gastos**:
     - Registro de salidas de dinero categorizadas por conceptos/etiquetas.
   - **Gestión de Categorías / Etiquetas**:

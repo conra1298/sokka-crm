@@ -12,10 +12,11 @@ export interface CreateTransactionCategoryInput {
 export interface CreateTransactionInput {
   type: 'income' | 'expense';
   amount: number;
+  paidAmount?: number;
   date?: string;
   periodMonth?: number;
   periodYear?: number;
-  status?: 'pending' | 'paid' | 'cancelled';
+  status?: 'pending' | 'paid' | 'partial' | 'cancelled';
   billingStatus?: 'unbilled' | 'billed';
   notes?: string;
   companyId?: string;
@@ -26,10 +27,11 @@ export interface CreateTransactionInput {
 export interface UpdateTransactionInput {
   type?: 'income' | 'expense';
   amount?: number;
+  paidAmount?: number | null;
   date?: string;
   periodMonth?: number;
   periodYear?: number;
-  status?: 'pending' | 'paid' | 'cancelled';
+  status?: 'pending' | 'paid' | 'partial' | 'cancelled';
   billingStatus?: 'unbilled' | 'billed';
   notes?: string;
   companyId?: string;
@@ -98,6 +100,7 @@ export async function createTransaction(input: CreateTransactionInput, user: Ses
     .values({
       type: input.type,
       amount: input.amount,
+      paidAmount: input.status === 'partial' ? (input.paidAmount ?? 0) : input.status === 'paid' ? input.amount : null,
       date: input.date || null,
       periodMonth: input.periodMonth || null,
       periodYear: input.periodYear || null,
@@ -123,10 +126,18 @@ export async function updateTransaction(id: string, input: UpdateTransactionInpu
   
   if (input.type !== undefined) updateData.type = input.type;
   if (input.amount !== undefined) updateData.amount = input.amount;
+  if (input.paidAmount !== undefined) updateData.paidAmount = input.paidAmount;
+  if (input.status !== undefined) {
+    updateData.status = input.status;
+    if (input.status === 'paid') {
+      updateData.paidAmount = input.amount !== undefined ? input.amount : existing.amount;
+    } else if (input.status === 'pending' || input.status === 'cancelled') {
+      updateData.paidAmount = null;
+    }
+  }
   if (input.date !== undefined) updateData.date = input.date || null;
   if (input.periodMonth !== undefined) updateData.periodMonth = input.periodMonth || null;
   if (input.periodYear !== undefined) updateData.periodYear = input.periodYear || null;
-  if (input.status !== undefined) updateData.status = input.status;
   if (input.billingStatus !== undefined) updateData.billingStatus = input.billingStatus;
   if (input.notes !== undefined) updateData.notes = input.notes || null;
   if (input.companyId !== undefined) updateData.companyId = input.companyId || null;

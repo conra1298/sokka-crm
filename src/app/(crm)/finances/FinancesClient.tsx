@@ -1,7 +1,7 @@
 'use client';
 
 import { useState } from 'react';
-import { formatArs } from '@/lib/utils/normalization';
+import { formatCurrency } from '@/lib/utils/normalization';
 import { createTransactionAction, updateTransactionAction, deleteTransactionAction } from './actions';
 import {
   Wallet,
@@ -14,20 +14,17 @@ import {
   Edit2,
   Trash2,
 } from 'lucide-react';
+import FinancesDashboard from './FinancesDashboard';
 import TransactionModal from './TransactionModal';
 
 export default function FinancesClient({ initialTransactions, categories, companies }: any) {
-  const [activeTab, setActiveTab] = useState<'dashboard' | 'income' | 'expense'>('dashboard');
+  const [activeTab, setActiveTab] = useState<'dashboard' | 'income' | 'expense' | 'categories'>('dashboard');
   const [transactions, setTransactions] = useState(initialTransactions);
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [editingTransaction, setEditingTransaction] = useState<any>(null);
   
   const incomes = transactions.filter((t: any) => t.type === 'income');
   const expenses = transactions.filter((t: any) => t.type === 'expense');
-
-  const totalIncome = incomes.reduce((sum: number, t: any) => sum + (t.status === 'paid' ? t.amount : 0), 0);
-  const totalExpense = expenses.reduce((sum: number, t: any) => sum + (t.status === 'paid' ? t.amount : 0), 0);
-  const netProfit = totalIncome - totalExpense;
 
   const handleOpenNew = (type: 'income' | 'expense') => {
     setEditingTransaction({ type, status: 'pending', billingStatus: 'unbilled', periodMonth: new Date().getMonth() + 1, periodYear: new Date().getFullYear() });
@@ -61,12 +58,12 @@ export default function FinancesClient({ initialTransactions, categories, compan
 
   return (
     <div className="space-y-6">
-      {/* Tabs */}
-      <div className="border-b border-gray-200">
+      {/* Header Actions */}
+      <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4 border-b border-gray-200 pb-4">
         <nav className="-mb-px flex space-x-8">
           <button
             onClick={() => setActiveTab('dashboard')}
-            className={`whitespace-nowrap border-b-2 py-4 px-1 text-sm font-medium ${
+            className={`whitespace-nowrap border-b-2 py-2 px-1 text-sm font-medium ${
               activeTab === 'dashboard'
                 ? 'border-sokka-blue text-sokka-blue'
                 : 'border-transparent text-gray-500 hover:border-gray-300 hover:text-gray-700'
@@ -76,67 +73,60 @@ export default function FinancesClient({ initialTransactions, categories, compan
           </button>
           <button
             onClick={() => setActiveTab('income')}
-            className={`whitespace-nowrap border-b-2 py-4 px-1 text-sm font-medium ${
+            className={`whitespace-nowrap border-b-2 py-2 px-1 text-sm font-medium ${
               activeTab === 'income'
                 ? 'border-sokka-blue text-sokka-blue'
                 : 'border-transparent text-gray-500 hover:border-gray-300 hover:text-gray-700'
             }`}
           >
-            Ingresos (Cobranza)
+            Ingresos
           </button>
           <button
             onClick={() => setActiveTab('expense')}
-            className={`whitespace-nowrap border-b-2 py-4 px-1 text-sm font-medium ${
+            className={`whitespace-nowrap border-b-2 py-2 px-1 text-sm font-medium ${
               activeTab === 'expense'
                 ? 'border-sokka-blue text-sokka-blue'
                 : 'border-transparent text-gray-500 hover:border-gray-300 hover:text-gray-700'
             }`}
           >
-            Egresos (Gastos)
+            Gastos
+          </button>
+          <button
+            onClick={() => setActiveTab('categories')}
+            className={`whitespace-nowrap border-b-2 py-2 px-1 text-sm font-medium ${
+              activeTab === 'categories'
+                ? 'border-sokka-blue text-sokka-blue'
+                : 'border-transparent text-gray-500 hover:border-gray-300 hover:text-gray-700'
+            }`}
+          >
+            Categorías (Etiquetas)
           </button>
         </nav>
+        
+        <div className="flex items-center gap-3">
+          <button
+            onClick={() => handleOpenNew('income')}
+            className="inline-flex items-center gap-2 rounded-lg bg-green-600 px-4 py-2 text-sm font-medium text-white hover:bg-green-700"
+          >
+            <Plus className="h-4 w-4" />
+            Ingreso
+          </button>
+          <button
+            onClick={() => handleOpenNew('expense')}
+            className="inline-flex items-center gap-2 rounded-lg bg-red-600 px-4 py-2 text-sm font-medium text-white hover:bg-red-700"
+          >
+            <Plus className="h-4 w-4" />
+            Gasto
+          </button>
+        </div>
       </div>
 
       {activeTab === 'dashboard' && (
-        <div className="grid gap-6 sm:grid-cols-3">
-          <div className="rounded-xl border bg-white p-6 shadow-sm">
-            <div className="flex items-center gap-4">
-              <div className="rounded-lg bg-green-100 p-3">
-                <TrendingUp className="h-6 w-6 text-green-600" />
-              </div>
-              <div>
-                <p className="text-sm font-medium text-gray-500">Ingresos Cobrados</p>
-                <p className="text-2xl font-bold text-gray-900">{formatArs(totalIncome)}</p>
-              </div>
-            </div>
-          </div>
-          
-          <div className="rounded-xl border bg-white p-6 shadow-sm">
-            <div className="flex items-center gap-4">
-              <div className="rounded-lg bg-red-100 p-3">
-                <TrendingDown className="h-6 w-6 text-red-600" />
-              </div>
-              <div>
-                <p className="text-sm font-medium text-gray-500">Gastos Totales</p>
-                <p className="text-2xl font-bold text-gray-900">{formatArs(totalExpense)}</p>
-              </div>
-            </div>
-          </div>
-
-          <div className="rounded-xl border bg-white p-6 shadow-sm">
-            <div className="flex items-center gap-4">
-              <div className="rounded-lg bg-blue-100 p-3">
-                <Wallet className="h-6 w-6 text-sokka-blue" />
-              </div>
-              <div>
-                <p className="text-sm font-medium text-gray-500">Net Profit</p>
-                <p className={`text-2xl font-bold ${netProfit >= 0 ? 'text-green-600' : 'text-red-600'}`}>
-                  {formatArs(netProfit)}
-                </p>
-              </div>
-            </div>
-          </div>
-        </div>
+        <FinancesDashboard
+          transactions={transactions}
+          categories={categories}
+          companies={companies}
+        />
       )}
 
       {(activeTab === 'income' || activeTab === 'expense') && (
@@ -181,7 +171,7 @@ export default function FinancesClient({ initialTransactions, categories, compan
                       {t.periodMonth ? months[t.periodMonth - 1] : ''} {t.periodYear}
                     </td>
                     <td className="px-6 py-4">{t.date || '-'}</td>
-                    <td className="px-6 py-4 font-medium text-gray-900">{formatArs(t.amount)}</td>
+                    <td className="px-6 py-4 font-medium text-gray-900">{formatCurrency(t.amount)}</td>
                     <td className="px-6 py-4">
                       <span className={`inline-flex rounded-full px-2 py-1 text-xs font-semibold ${
                         t.status === 'paid' ? 'bg-green-100 text-green-700' :
@@ -222,6 +212,48 @@ export default function FinancesClient({ initialTransactions, categories, compan
                 )}
               </tbody>
             </table>
+          </div>
+        </div>
+      )}
+
+      {activeTab === 'categories' && (
+        <div className="rounded-xl border bg-white shadow-sm p-6">
+          <h2 className="text-lg font-medium text-gray-900 mb-4">Etiquetas de Gastos / Categorías</h2>
+          <div className="grid gap-4 sm:grid-cols-2 md:grid-cols-3">
+            {categories.map((c: any) => (
+              <div key={c.id} className="rounded-lg border p-4 flex items-center gap-3">
+                <div className="w-4 h-4 rounded-full" style={{ backgroundColor: c.color || '#ccc' }}></div>
+                <span className="font-medium text-gray-800">{c.name}</span>
+                <span className="text-xs text-gray-500 ml-auto capitalize">{c.type}</span>
+              </div>
+            ))}
+          </div>
+          <div className="mt-8 border-t pt-6 max-w-md">
+            <h3 className="text-md font-medium text-gray-900 mb-3">Agregar Nueva Etiqueta</h3>
+            <form onSubmit={async (e) => {
+              e.preventDefault();
+              const form = e.target as HTMLFormElement;
+              const name = (form.elements.namedItem('name') as HTMLInputElement).value;
+              const color = (form.elements.namedItem('color') as HTMLInputElement).value;
+              
+              // Only call action if we have it, wait, we need to import it.
+              // We'll reload the page for now to get the new category, since it's simpler.
+              const { createTransactionCategoryAction } = await import('./actions');
+              await createTransactionCategoryAction({ name, color, type: 'expense' });
+              window.location.reload();
+            }} className="space-y-4">
+              <div>
+                <label className="mb-1 block text-sm font-medium text-gray-700">Nombre de la Etiqueta</label>
+                <input type="text" name="name" required className="w-full rounded-lg border border-gray-300 p-2.5 text-sm" placeholder="Ej: Herramientas, Sueldos..." />
+              </div>
+              <div>
+                <label className="mb-1 block text-sm font-medium text-gray-700">Color</label>
+                <input type="color" name="color" defaultValue="#5CB2D4" className="w-full h-10 rounded-lg cursor-pointer" />
+              </div>
+              <button type="submit" className="rounded-lg bg-sokka-blue px-4 py-2 text-sm font-medium text-white hover:bg-sokka-blue/90">
+                Guardar Etiqueta
+              </button>
+            </form>
           </div>
         </div>
       )}

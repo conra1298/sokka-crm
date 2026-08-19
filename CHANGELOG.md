@@ -5,6 +5,32 @@ El formato está basado en [Keep a Changelog](https://keepachangelog.com/es-ES/1
 
 ---
 
+## [1.1.0] - 2026-08-19
+
+### 🚀 Añadido (Feat)
+- **Módulo de Finanzas Integral (`/finances`)**:
+  - Exclusivo para usuarios con rol `admin`.
+  - **Dashboard Ejecutivo con Gráficos Interactivos (`recharts`)**:
+    - **Flujo de Caja Anual**: Comparativa visual mensual de Ingresos Cobrados, Ingresos Pendientes y Egresos.
+    - **Estado de Cobranzas Mensual**: Barra de progreso y desglose de montos/clientes cobrados vs pendientes según el período de facturación.
+    - **Distribución de Gastos por Categoría**: Gráfico Donut con segmentación porcentual y colores por etiqueta.
+    - **Tarjetas KPI**: Resumen anual de ingresos, gastos, margen neto operativo y total por cobrar del mes.
+  - **Control de Cobranzas e Ingresos**:
+    - Registro detallado por cliente, período (mes/año), fecha de pago, monto ($ ARS), estado de pago y estado de facturación.
+  - **Control de Egresos y Gastos**:
+    - Registro de salidas de dinero categorizadas por conceptos/etiquetas.
+  - **Gestión de Categorías / Etiquetas**:
+    - Alta y administración de etiquetas personalizadas de gastos con selector de color.
+- **Acceso Rápido y Seguridad**:
+  - Acceso restringido en backend y frontend exclusivo para Administradores.
+  - Enlace al módulo de Finanzas en la barra de navegación lateral.
+
+### 🛠️ Correcciones (Fix)
+- Corrección de visualización del logo corporativo en la pantalla de inicio de sesión (`/login`).
+- Actualización de configuración del dialecto Turso en `drizzle.config.ts`.
+
+---
+
 ## [1.0.6] - 2026-08-15
 
 ### 🚀 Añadido (Feat)

@@ -2,7 +2,7 @@ import { requireAuth } from '@/lib/services/auth.service';
 import { redirect } from 'next/navigation';
 import { listTransactions, listTransactionCategories } from '@/lib/services/finance.service';
 import FinancesClient from './FinancesClient';
-import { getCompanies } from '@/lib/services/company.service';
+import { listCompanies } from '@/lib/services/company.service';
 
 export const metadata = {
   title: 'Finanzas | Sokka CRM',
@@ -17,7 +17,7 @@ export default async function FinancesPage() {
 
   const transactions = await listTransactions(user);
   const categories = await listTransactionCategories(user);
-  const companies = await getCompanies(user);
+  const companies = await listCompanies(user);
 
   return (
     <div className="flex h-full w-full flex-col">

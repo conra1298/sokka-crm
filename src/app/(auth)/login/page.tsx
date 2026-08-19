@@ -2,7 +2,6 @@
 
 import { Suspense, useActionState } from 'react';
 import { useSearchParams } from 'next/navigation';
-import Image from 'next/image';
 import { loginAction } from './actions';
 import { Shield, Lock, Mail, ArrowRight } from 'lucide-react';
 
@@ -84,7 +83,7 @@ export default function LoginPage() {
       <div className="w-full max-w-md">
         <div className="text-center mb-8">
           <div className="inline-flex items-center justify-center mb-4">
-            <Image src="/logo-app.svg" alt="Sokka Logo" width={96} height={96} priority className="object-contain drop-shadow-xl" />
+            <img src="/logo-app.svg" alt="Sokka Logo" width="96" height="96" className="object-contain drop-shadow-xl" />
           </div>
           <p className="font-display font-medium text-slate-500 tracking-[0.2em] uppercase text-sm mt-2">Evolucionando</p>
         </div>

@@ -56,14 +56,17 @@ export default function Sidebar({ user }: SidebarProps) {
       {/* Desktop Sidebar */}
       <aside className="hidden md:flex md:w-64 md:flex-col md:fixed md:inset-y-0 bg-[#274283] text-white z-30 shadow-xl">
         {/* Brand Header */}
-        <div className="flex items-center gap-3 px-6 py-5 border-b border-white/10">
-          <img src="/logo-app.svg" alt="Sokka Logo" className="w-10 h-10 object-contain drop-shadow-md" />
-          <div>
-            <h1 className="font-display font-bold text-xl tracking-tight text-white leading-none">
-              SOKKA CRM
-            </h1>
-            <p className="text-xs text-white/70 mt-0.5 font-sans">Gestión de Ventas B2B</p>
-          </div>
+        <div className="flex flex-col items-center justify-center px-6 py-6 border-b border-white/10 text-center">
+          <Link href="/dashboard" className="flex flex-col items-center group">
+            <img
+              src="/logo-app.svg"
+              alt="Sokka Logo"
+              className="w-12 h-12 object-contain drop-shadow-md transition-transform duration-200 group-hover:scale-105"
+            />
+            <span className="text-[11px] font-semibold text-white/80 mt-2.5 tracking-wider uppercase font-sans">
+              Gestión Comercial
+            </span>
+          </Link>
         </div>
 
         {/* Navigation */}

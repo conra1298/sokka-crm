@@ -223,20 +223,20 @@ export default function TransactionModal({ transaction, companies, categories, o
             />
           </div>
 
-          <div className="mt-4 flex justify-end gap-2.5 border-t border-gray-100 pt-3">
+          <div className="mt-5 flex items-center justify-end gap-3 border-t border-gray-100 pt-3.5">
             <button
               type="button"
               onClick={onClose}
-              className="rounded-lg px-3.5 py-1.5 text-xs font-medium text-gray-700 hover:bg-gray-100 transition"
+              className="rounded-lg px-4 py-2 text-xs font-semibold text-gray-600 hover:bg-gray-100 transition"
             >
               Cancelar
             </button>
             <button
               type="submit"
               disabled={loading}
-              className="rounded-lg bg-sokka-blue px-4 py-1.5 text-xs font-medium text-white hover:bg-sokka-blue/90 disabled:opacity-50 transition shadow-sm"
+              className="inline-flex items-center justify-center rounded-lg bg-[#EB7638] px-5 py-2 text-xs font-bold text-white shadow-md hover:bg-[#d15f2a] active:translate-y-0.5 disabled:opacity-50 transition cursor-pointer"
             >
-              {loading ? 'Guardando...' : 'Guardar'}
+              {loading ? 'Guardando...' : (transaction?.id ? 'Guardar Cambios' : 'Confirmar y Guardar')}
             </button>
           </div>
         </form>

@@ -14,6 +14,7 @@ import {
   Edit2,
   Trash2,
   X,
+  CheckCircle,
 } from 'lucide-react';
 import FinancesDashboard from './FinancesDashboard';
 import TransactionModal from './TransactionModal';
@@ -35,6 +36,24 @@ export default function FinancesClient({ initialTransactions, categories, compan
   const handleEdit = (tx: any) => {
     setEditingTransaction(tx);
     setIsModalOpen(true);
+  };
+
+  const handleQuickConfirm = async (tx: any) => {
+    const todayStr = new Date().toISOString().split('T')[0];
+    const updated = await updateTransactionAction(tx.id, {
+      status: 'paid',
+      paidAmount: tx.amount,
+      date: tx.date || todayStr,
+    });
+    setTransactions((prev: any) => prev.map((t: any) => t.id === updated.id ? { ...t, ...updated } : t));
+  };
+
+  const handleToggleBilling = async (tx: any) => {
+    const nextStatus = tx.billingStatus === 'billed' ? 'unbilled' : 'billed';
+    const updated = await updateTransactionAction(tx.id, {
+      billingStatus: nextStatus,
+    });
+    setTransactions((prev: any) => prev.map((t: any) => t.id === updated.id ? { ...t, ...updated } : t));
   };
 
   const handleDelete = async (id: string) => {
@@ -204,11 +223,16 @@ export default function FinancesClient({ initialTransactions, categories, compan
                     </td>
                     {activeTab === 'income' && (
                       <td className="px-6 py-4">
-                        <span className={`inline-flex rounded-full px-2.5 py-1 text-xs font-semibold ${
-                          t.billingStatus === 'billed' ? 'bg-blue-100 text-blue-700' : 'bg-gray-100 text-gray-700'
-                        }`}>
+                        <button
+                          type="button"
+                          onClick={() => handleToggleBilling(t)}
+                          title="Clic para alternar estado de facturación"
+                          className={`inline-flex rounded-full px-2.5 py-1 text-xs font-semibold cursor-pointer hover:opacity-80 transition ${
+                            t.billingStatus === 'billed' ? 'bg-blue-100 text-blue-700' : 'bg-gray-100 text-gray-600'
+                          }`}
+                        >
                           {t.billingStatus === 'billed' ? 'Facturado' : 'No Facturado'}
-                        </span>
+                        </button>
                       </td>
                     )}
                     <td className="px-6 py-4 max-w-[220px]">
@@ -217,7 +241,7 @@ export default function FinancesClient({ initialTransactions, categories, compan
                           type="button"
                           onClick={() => setSelectedNote(t)}
                           title="Clic para ver nota completa"
-                          className="flex items-center gap-1.5 rounded-lg border border-gray-200 bg-gray-50 px-2.5 py-1 text-xs text-gray-700 hover:border-sokka-blue hover:bg-blue-50/50 hover:text-sokka-blue transition max-w-full"
+                          className="flex items-center gap-1.5 rounded-lg border border-gray-200 bg-gray-50 px-2.5 py-1 text-xs text-gray-700 hover:border-[#274283] hover:bg-blue-50/50 hover:text-[#274283] transition max-w-full"
                         >
                           <span className="truncate">{t.notes}</span>
                         </button>
@@ -225,11 +249,31 @@ export default function FinancesClient({ initialTransactions, categories, compan
                         <span className="text-gray-400 text-xs">-</span>
                       )}
                     </td>
-                    <td className="px-6 py-4 text-right">
-                      <button onClick={() => handleEdit(t)} className="text-blue-600 hover:text-blue-900 mr-3">
+                    <td className="px-6 py-4 text-right whitespace-nowrap">
+                      {t.status !== 'paid' && (
+                        <button
+                          type="button"
+                          onClick={() => handleQuickConfirm(t)}
+                          title="Confirmar Cobro / Marcar como Pagado con 1 clic"
+                          className="inline-flex items-center justify-center p-1.5 rounded-lg text-green-600 hover:bg-green-50 hover:text-green-800 transition mr-1.5"
+                        >
+                          <CheckCircle className="h-4 w-4" />
+                        </button>
+                      )}
+                      <button
+                        type="button"
+                        onClick={() => handleEdit(t)}
+                        title="Editar registro"
+                        className="inline-flex items-center justify-center p-1.5 rounded-lg text-blue-600 hover:bg-blue-50 hover:text-blue-800 transition mr-1.5"
+                      >
                         <Edit2 className="h-4 w-4" />
                       </button>
-                      <button onClick={() => handleDelete(t.id)} className="text-red-600 hover:text-red-900">
+                      <button
+                        type="button"
+                        onClick={() => handleDelete(t.id)}
+                        title="Eliminar registro"
+                        className="inline-flex items-center justify-center p-1.5 rounded-lg text-red-600 hover:bg-red-50 hover:text-red-800 transition"
+                      >
                         <Trash2 className="h-4 w-4" />
                       </button>
                     </td>
@@ -282,7 +326,7 @@ export default function FinancesClient({ initialTransactions, categories, compan
                 <label className="mb-1 block text-sm font-medium text-gray-700">Color</label>
                 <input type="color" name="color" defaultValue="#5CB2D4" className="w-full h-10 rounded-lg cursor-pointer" />
               </div>
-              <button type="submit" className="rounded-lg bg-sokka-blue px-4 py-2 text-sm font-medium text-white hover:bg-sokka-blue/90">
+              <button type="submit" className="rounded-lg bg-[#274283] px-5 py-2 text-sm font-semibold text-white hover:bg-[#1e3468] shadow-sm transition cursor-pointer">
                 Guardar Etiqueta
               </button>
             </form>

@@ -9,6 +9,7 @@ const config: Config = {
   theme: {
     extend: {
       colors: {
+        'sokka-blue': '#274283',
         sokka: {
           primary: "#274283",
           secondary: "#5CB2D4",

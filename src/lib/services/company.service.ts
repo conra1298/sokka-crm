@@ -126,7 +126,7 @@ export async function getCompanyById(id: string, user: SessionUser) {
 export const getCompanyDetail = getCompanyById;
 
 export async function createCompany(input: CreateCompanyInput, user: SessionUser) {
-  const rawDomain = input.domain?.trim() || '';
+  const rawDomain = input.domain?.trim() || input.website?.trim() || '';
   const normalized = normalizeDomain(rawDomain);
 
   const [newCompany] = await db
@@ -137,7 +137,7 @@ export async function createCompany(input: CreateCompanyInput, user: SessionUser
       industry: input.industry?.trim() || null,
       phone: input.phone?.trim() || null,
       address: input.address?.trim() || null,
-      website: input.website?.trim() || null,
+      website: input.website?.trim() || (normalized ? `https://${normalized}` : null),
       linkedinUrl: input.linkedinUrl?.trim() || null,
       instagramUrl: input.instagramUrl?.trim() || null,
       facebookUrl: input.facebookUrl?.trim() || null,
@@ -169,11 +169,23 @@ export async function updateCompany(id: string, input: UpdateCompanyInput, user:
   const updateData: Record<string, any> = { updatedAt: new Date().toISOString() };
 
   if (input.name !== undefined) updateData.name = input.name.trim();
-  if (input.domain !== undefined) updateData.domain = normalizeDomain(input.domain) || null;
+  if (input.website !== undefined) {
+    const cleanWeb = input.website?.trim() || null;
+    updateData.website = cleanWeb;
+    if (input.domain === undefined) {
+      updateData.domain = normalizeDomain(cleanWeb || '') || null;
+    }
+  }
+  if (input.domain !== undefined) {
+    const cleanDom = normalizeDomain(input.domain) || null;
+    updateData.domain = cleanDom;
+    if (input.website === undefined && cleanDom) {
+      updateData.website = `https://${cleanDom}`;
+    }
+  }
   if (input.industry !== undefined) updateData.industry = input.industry?.trim() || null;
   if (input.phone !== undefined) updateData.phone = input.phone?.trim() || null;
   if (input.address !== undefined) updateData.address = input.address?.trim() || null;
-  if (input.website !== undefined) updateData.website = input.website?.trim() || null;
   if (input.linkedinUrl !== undefined) updateData.linkedinUrl = input.linkedinUrl?.trim() || null;
   if (input.instagramUrl !== undefined) updateData.instagramUrl = input.instagramUrl?.trim() || null;
   if (input.facebookUrl !== undefined) updateData.facebookUrl = input.facebookUrl?.trim() || null;

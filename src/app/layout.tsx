@@ -7,7 +7,16 @@ export const metadata: Metadata = {
     default: 'Sokka CRM — Plataforma de Ventas B2B',
   },
   description:
-    'Sokka CRM es una alternativa enfocada y confiable a HubSpot CRM para equipos de ventas B2B. Gestiona contactos, empresas, oportunidades, actividades y tareas en un solo lugar.',
+    'Sokka CRM es una plataforma integral para equipos comerciales y agencias. Gestiona contactos, empresas, oportunidades, finanzas y clientes activos en un solo lugar.',
+  icons: {
+    icon: [
+      { url: '/logo-app.svg', type: 'image/svg+xml' },
+    ],
+    shortcut: ['/logo-app.svg'],
+    apple: [
+      { url: '/logo-app.svg' },
+    ],
+  },
 };
 
 export default function RootLayout({

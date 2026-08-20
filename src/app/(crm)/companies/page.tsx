@@ -121,15 +121,15 @@ export default async function CompaniesPage(props: {
                     </td>
 
                     <td className="p-4 text-xs font-mono text-slate-600">
-                      {company.domain ? (
+                      {company.domain || company.website ? (
                         <a
-                          href={`https://${company.domain}`}
+                          href={company.website?.startsWith('http') ? company.website : `https://${company.domain || company.website}`}
                           target="_blank"
                           rel="noreferrer"
                           className="hover:underline flex items-center gap-1 text-[#5CB2D4]"
                         >
                           <Globe className="w-3 h-3" />
-                          <span>{company.domain}</span>
+                          <span>{(company.domain || company.website).replace(/^https?:\/\//, '').replace(/\/.*$/, '')}</span>
                         </a>
                       ) : (
                         <span className="text-slate-400 italic">Sin dominio</span>

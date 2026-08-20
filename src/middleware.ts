@@ -10,8 +10,11 @@ export async function middleware(request: NextRequest) {
   const response = NextResponse.next();
   response.headers.set('x-request-id', requestId);
 
-  // Check public paths
-  if (PUBLIC_PATHS.some((path) => pathname.startsWith(path))) {
+  // Allow public static assets and files
+  if (
+    PUBLIC_PATHS.some((path) => pathname.startsWith(path)) ||
+    pathname.match(/\.(svg|png|jpg|jpeg|gif|webp|ico)$/i)
+  ) {
     return response;
   }
 
@@ -27,5 +30,5 @@ export async function middleware(request: NextRequest) {
 }
 
 export const config = {
-  matcher: ['/((?!_next/static|_next/image|favicon.ico|Logo sokka.svg).*)'],
+  matcher: ['/((?!_next/static|_next/image|favicon.ico|.*\\.(?:svg|png|jpg|jpeg|gif|webp)$).*)'],
 };

@@ -83,7 +83,7 @@ export async function archiveContactAction(id: string) {
   try {
     await archiveContact(id, user);
     revalidatePath('/contacts');
-    redirect('/contacts');
+    return { success: true };
   } catch (err: any) {
     return { error: err.message || 'Failed to archive contact.' };
   }

@@ -52,7 +52,15 @@ export default function CompanyEditModal({ company, users, onClose }: CompanyEdi
   const handleArchive = async () => {
     if (!confirm('¿Estás seguro de que deseas archivar/eliminar esta empresa?')) return;
     setIsArchiving(true);
-    await archiveCompanyAction(company.id);
+    const res = await archiveCompanyAction(company.id);
+    if (res?.error) {
+      setError(res.error);
+      setIsArchiving(false);
+      return;
+    }
+    onClose();
+    router.push('/companies');
+    router.refresh();
   };
 
   return (

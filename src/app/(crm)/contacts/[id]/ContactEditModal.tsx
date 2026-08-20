@@ -55,7 +55,15 @@ export default function ContactEditModal({
   const handleArchive = async () => {
     if (!confirm('¿Estás seguro de que deseas archivar/eliminar este contacto?')) return;
     setIsArchiving(true);
-    await archiveContactAction(contact.id);
+    const res = await archiveContactAction(contact.id);
+    if (res?.error) {
+      setError(res.error);
+      setIsArchiving(false);
+      return;
+    }
+    onClose();
+    router.push('/contacts');
+    router.refresh();
   };
 
   return (

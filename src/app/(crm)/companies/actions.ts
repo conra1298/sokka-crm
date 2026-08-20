@@ -84,7 +84,7 @@ export async function archiveCompanyAction(id: string) {
     await archiveCompany(id, user);
     revalidatePath('/companies');
     revalidatePath('/dashboard');
-    redirect('/companies');
+    return { success: true };
   } catch (err: any) {
     return { error: err.message || 'Error al archivar la empresa.' };
   }

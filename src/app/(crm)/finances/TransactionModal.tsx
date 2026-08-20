@@ -1,7 +1,7 @@
 'use client';
 
 import { useState } from 'react';
-import { X, Calculator, Info } from 'lucide-react';
+import { X, Calculator } from 'lucide-react';
 import { formatCurrency } from '@/lib/utils/normalization';
 
 export default function TransactionModal({ transaction, companies, categories, onClose, onSave }: any) {
@@ -40,23 +40,34 @@ export default function TransactionModal({ transaction, companies, categories, o
   const months = ['Enero', 'Febrero', 'Marzo', 'Abril', 'Mayo', 'Junio', 'Julio', 'Agosto', 'Septiembre', 'Octubre', 'Noviembre', 'Diciembre'];
 
   return (
-    <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/50 p-4 overflow-y-auto">
-      <div className="w-full max-w-lg rounded-2xl bg-white p-6 shadow-xl my-8">
-        <div className="mb-5 flex items-center justify-between">
-          <h2 className="text-xl font-semibold text-gray-900">
+    <div 
+      className="fixed inset-0 z-50 flex items-center justify-center bg-black/50 p-4 backdrop-blur-sm overflow-y-auto animate-in fade-in duration-200"
+      onClick={onClose}
+    >
+      <div 
+        className="w-full max-w-md rounded-2xl bg-white p-5 shadow-2xl my-6 border border-gray-100"
+        onClick={(e) => e.stopPropagation()}
+      >
+        <div className="mb-4 flex items-center justify-between border-b border-gray-100 pb-3">
+          <h2 className="text-lg font-semibold text-gray-900">
             {transaction?.id ? 'Editar' : 'Nuevo'} {formData.type === 'income' ? 'Ingreso' : 'Gasto'}
           </h2>
-          <button onClick={onClose} className="rounded-full p-2 hover:bg-gray-100 transition">
-            <X className="h-5 w-5 text-gray-500" />
+          <button 
+            type="button"
+            onClick={onClose} 
+            className="rounded-full p-1.5 text-gray-400 hover:bg-gray-100 hover:text-gray-700 transition"
+            aria-label="Cerrar"
+          >
+            <X className="h-5 w-5" />
           </button>
         </div>
 
-        <form onSubmit={handleSubmit} className="space-y-4">
+        <form onSubmit={handleSubmit} className="space-y-3.5">
           {formData.type === 'income' && (
             <div>
-              <label className="mb-1 block text-sm font-medium text-gray-700">Cliente</label>
+              <label className="mb-1 block text-xs font-semibold text-gray-700">Cliente</label>
               <select
-                className="w-full rounded-lg border border-gray-300 p-2.5 text-sm outline-none focus:border-sokka-blue focus:ring-1 focus:ring-sokka-blue bg-white"
+                className="w-full rounded-lg border border-gray-300 p-2 text-sm outline-none focus:border-sokka-blue focus:ring-1 focus:ring-sokka-blue bg-white"
                 value={formData.companyId}
                 onChange={(e) => setFormData({ ...formData, companyId: e.target.value })}
                 required
@@ -71,9 +82,9 @@ export default function TransactionModal({ transaction, companies, categories, o
 
           {formData.type === 'expense' && (
             <div>
-              <label className="mb-1 block text-sm font-medium text-gray-700">Categoría / Etiqueta</label>
+              <label className="mb-1 block text-xs font-semibold text-gray-700">Categoría / Etiqueta</label>
               <select
-                className="w-full rounded-lg border border-gray-300 p-2.5 text-sm outline-none focus:border-sokka-blue focus:ring-1 focus:ring-sokka-blue bg-white"
+                className="w-full rounded-lg border border-gray-300 p-2 text-sm outline-none focus:border-sokka-blue focus:ring-1 focus:ring-sokka-blue bg-white"
                 value={formData.categoryId}
                 onChange={(e) => setFormData({ ...formData, categoryId: e.target.value })}
               >
@@ -85,11 +96,11 @@ export default function TransactionModal({ transaction, companies, categories, o
             </div>
           )}
 
-          <div className="grid grid-cols-2 gap-4">
+          <div className="grid grid-cols-2 gap-3">
             <div>
-              <label className="mb-1 block text-sm font-medium text-gray-700">Mes del Período</label>
+              <label className="mb-1 block text-xs font-semibold text-gray-700">Mes del Período</label>
               <select
-                className="w-full rounded-lg border border-gray-300 p-2.5 text-sm outline-none focus:border-sokka-blue bg-white"
+                className="w-full rounded-lg border border-gray-300 p-2 text-sm outline-none focus:border-sokka-blue bg-white"
                 value={formData.periodMonth}
                 onChange={(e) => setFormData({ ...formData, periodMonth: parseInt(e.target.value) })}
               >
@@ -99,10 +110,10 @@ export default function TransactionModal({ transaction, companies, categories, o
               </select>
             </div>
             <div>
-              <label className="mb-1 block text-sm font-medium text-gray-700">Año</label>
+              <label className="mb-1 block text-xs font-semibold text-gray-700">Año</label>
               <input
                 type="number"
-                className="w-full rounded-lg border border-gray-300 p-2.5 text-sm outline-none focus:border-sokka-blue"
+                className="w-full rounded-lg border border-gray-300 p-2 text-sm outline-none focus:border-sokka-blue"
                 value={formData.periodYear}
                 onChange={(e) => setFormData({ ...formData, periodYear: parseInt(e.target.value) })}
               />
@@ -110,7 +121,7 @@ export default function TransactionModal({ transaction, companies, categories, o
           </div>
 
           <div>
-            <label className="mb-1 block text-sm font-medium text-gray-700">
+            <label className="mb-1 block text-xs font-semibold text-gray-700">
               {formData.type === 'income' ? 'Monto Total Acordado ($ ARS)' : 'Monto Total ($ ARS)'}
             </label>
             <input
@@ -118,17 +129,17 @@ export default function TransactionModal({ transaction, companies, categories, o
               step="0.01"
               required
               placeholder="0.00"
-              className="w-full rounded-lg border border-gray-300 p-2.5 text-sm outline-none focus:border-sokka-blue"
+              className="w-full rounded-lg border border-gray-300 p-2 text-sm outline-none focus:border-sokka-blue"
               value={formData.amount}
               onChange={(e) => setFormData({ ...formData, amount: e.target.value })}
             />
           </div>
 
-          <div className="grid grid-cols-2 gap-4">
+          <div className="grid grid-cols-2 gap-3">
             <div>
-              <label className="mb-1 block text-sm font-medium text-gray-700">Estado de Pago</label>
+              <label className="mb-1 block text-xs font-semibold text-gray-700">Estado de Pago</label>
               <select
-                className="w-full rounded-lg border border-gray-300 p-2.5 text-sm outline-none focus:border-sokka-blue bg-white"
+                className="w-full rounded-lg border border-gray-300 p-2 text-sm outline-none focus:border-sokka-blue bg-white"
                 value={formData.status}
                 onChange={(e) => setFormData({ ...formData, status: e.target.value })}
               >
@@ -139,10 +150,10 @@ export default function TransactionModal({ transaction, companies, categories, o
               </select>
             </div>
             <div>
-              <label className="mb-1 block text-sm font-medium text-gray-700">Fecha de Pago / Anticipo</label>
+              <label className="mb-1 block text-xs font-semibold text-gray-700">Fecha de Pago</label>
               <input
                 type="date"
-                className="w-full rounded-lg border border-gray-300 p-2.5 text-sm outline-none focus:border-sokka-blue"
+                className="w-full rounded-lg border border-gray-300 p-2 text-sm outline-none focus:border-sokka-blue"
                 value={formData.date}
                 onChange={(e) => setFormData({ ...formData, date: e.target.value })}
               />
@@ -151,34 +162,34 @@ export default function TransactionModal({ transaction, companies, categories, o
 
           {/* Partial payment details breakdown */}
           {formData.status === 'partial' && (
-            <div className="rounded-xl border border-amber-200 bg-amber-50/70 p-4 space-y-3">
-              <div className="flex items-center gap-2 text-amber-800 text-xs font-semibold uppercase">
-                <Calculator className="h-4 w-4" />
+            <div className="rounded-xl border border-amber-200 bg-amber-50/70 p-3 space-y-2 text-xs">
+              <div className="flex items-center gap-1.5 text-amber-800 font-semibold uppercase text-[11px]">
+                <Calculator className="h-3.5 w-3.5" />
                 <span>Desglose de Pago Parcial</span>
               </div>
               
               <div>
-                <label className="mb-1 block text-xs font-medium text-amber-900">
-                  Monto efectivamente cobrado hasta la fecha ($ ARS)
+                <label className="mb-1 block text-[11px] font-medium text-amber-900">
+                  Monto efectivamente cobrado ($ ARS)
                 </label>
                 <input
                   type="number"
                   step="0.01"
                   required
                   placeholder="0.00"
-                  className="w-full rounded-lg border border-amber-300 bg-white p-2 text-sm outline-none focus:border-sokka-blue"
+                  className="w-full rounded-lg border border-amber-300 bg-white p-1.5 text-sm outline-none focus:border-sokka-blue"
                   value={formData.paidAmount}
                   onChange={(e) => setFormData({ ...formData, paidAmount: e.target.value })}
                 />
               </div>
 
-              <div className="grid grid-cols-2 gap-3 text-xs pt-1 border-t border-amber-200/60">
+              <div className="grid grid-cols-2 gap-2 text-[11px] pt-1 border-t border-amber-200/60">
                 <div>
                   <span className="text-gray-500">Cobrado: </span>
                   <span className="font-bold text-green-700">{formatCurrency(parsedPaid)} ({percentPaid}%)</span>
                 </div>
                 <div>
-                  <span className="text-gray-500">Saldo Pendiente: </span>
+                  <span className="text-gray-500">Resta: </span>
                   <span className="font-bold text-amber-700">{formatCurrency(remainingBalance)}</span>
                 </div>
               </div>
@@ -187,9 +198,9 @@ export default function TransactionModal({ transaction, companies, categories, o
 
           {formData.type === 'income' && (
             <div>
-              <label className="mb-1 block text-sm font-medium text-gray-700">Estado de Facturación</label>
+              <label className="mb-1 block text-xs font-semibold text-gray-700">Estado de Facturación</label>
               <select
-                className="w-full rounded-lg border border-gray-300 p-2.5 text-sm outline-none focus:border-sokka-blue bg-white"
+                className="w-full rounded-lg border border-gray-300 p-2 text-sm outline-none focus:border-sokka-blue bg-white"
                 value={formData.billingStatus}
                 onChange={(e) => setFormData({ ...formData, billingStatus: e.target.value })}
               >
@@ -200,30 +211,30 @@ export default function TransactionModal({ transaction, companies, categories, o
           )}
 
           <div>
-            <label className="mb-1 block text-sm font-medium text-gray-700">
+            <label className="mb-1 block text-xs font-semibold text-gray-700">
               Observaciones / Aclaraciones
             </label>
             <textarea
-              className="w-full rounded-lg border border-gray-300 p-2.5 text-sm outline-none focus:border-sokka-blue"
-              rows={3}
-              placeholder="Ej: Anticipo 50% abonado el día 5. Saldo prometido para el 20. Factura A emitida..."
+              className="w-full rounded-lg border border-gray-300 p-2 text-sm outline-none focus:border-sokka-blue"
+              rows={2}
+              placeholder="Notas, acuerdos de pago, fechas acordadas..."
               value={formData.notes}
               onChange={(e) => setFormData({ ...formData, notes: e.target.value })}
             />
           </div>
 
-          <div className="mt-6 flex justify-end gap-3 border-t border-gray-100 pt-4">
+          <div className="mt-4 flex justify-end gap-2.5 border-t border-gray-100 pt-3">
             <button
               type="button"
               onClick={onClose}
-              className="rounded-lg px-4 py-2 text-sm font-medium text-gray-700 hover:bg-gray-100 transition"
+              className="rounded-lg px-3.5 py-1.5 text-xs font-medium text-gray-700 hover:bg-gray-100 transition"
             >
               Cancelar
             </button>
             <button
               type="submit"
               disabled={loading}
-              className="rounded-lg bg-sokka-blue px-5 py-2 text-sm font-medium text-white hover:bg-sokka-blue/90 disabled:opacity-50 transition"
+              className="rounded-lg bg-sokka-blue px-4 py-1.5 text-xs font-medium text-white hover:bg-sokka-blue/90 disabled:opacity-50 transition shadow-sm"
             >
               {loading ? 'Guardando...' : 'Guardar'}
             </button>
